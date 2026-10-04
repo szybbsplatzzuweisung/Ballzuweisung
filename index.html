@@ -1,0 +1,2270 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ball des SZ Ybbs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..800;1,6..96,400..800&family=Jost:wght@400;500;600&display=swap">
+<style id="app-style">/* ===== Farben & Schriften (hell) ===== */
+:root {
+  --bg: #EDEFF4; --surface: #FFFFFF; --surface-2: #F5F6F9;
+  --text: #18213D; --muted: #596079; --line: #D3D8E3; --line-strong: #AEB5C7;
+  --accent: #9C7A43; --accent-soft: #F1E8D6;
+  --hl: #8C1D40; --hl-text: #FFFFFF;
+  --ok: #2E6A4E; --warn: #9A5600; --danger: #A3262A;
+  --plan-bg: #FCFCFD; --plan-stroke: #18213D; --plan-grid: #E4E7EF;
+  --table: #FFFFFF; --table-dim: #EEF0F5; --chair: #C3CAD9;
+  --floor-a: #F0E5CE; --floor-b: #E6D5B4; --zone: #F0F2F6;
+  --serif: "Bodoni Moda", "Bodoni 72", "Didot", "Bodoni MT", Georgia, serif;
+  --sans: "Jost", "Futura", "Avenir Next", "Century Gothic", system-ui, -apple-system, "Segoe UI", sans-serif;
+  color-scheme: light;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+/* ===== Farben (dunkel) ===== */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0E1428; --surface: #161E36; --surface-2: #1C2541;
+    --text: #EEE9DD; --muted: #A3AAC2; --line: #2A3453; --line-strong: #46517A;
+    --accent: #D2B47A; --accent-soft: #2B2820;
+    --hl: #C2456E; --hl-text: #FFFFFF;
+    --ok: #74C49E; --warn: #E6AC5C; --danger: #F07075;
+    --plan-bg: #121A31; --plan-stroke: #D9D3C3; --plan-grid: #1D2643;
+    --table: #1E2846; --table-dim: #18203A; --chair: #3C4769;
+    --floor-a: #3A3324; --floor-b: #2F2A1E; --zone: #1A2340;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0E1428; --surface: #161E36; --surface-2: #1C2541;
+  --text: #EEE9DD; --muted: #A3AAC2; --line: #2A3453; --line-strong: #46517A;
+  --accent: #D2B47A; --accent-soft: #2B2820;
+  --hl: #C2456E; --hl-text: #FFFFFF;
+  --ok: #74C49E; --warn: #E6AC5C; --danger: #F07075;
+  --plan-bg: #121A31; --plan-stroke: #D9D3C3; --plan-grid: #1D2643;
+  --table: #1E2846; --table-dim: #18203A; --chair: #3C4769;
+  --floor-a: #3A3324; --floor-b: #2F2A1E; --zone: #1A2340;
+  color-scheme: dark;
+}
+
+/* ===== Grundlagen ===== */
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-padding-top: env(safe-area-inset-top, 0px); -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 16px; line-height: 1.5; }
+button, input, select, textarea { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.muted { color: var(--muted); }
+small { font-size: .85em; }
+
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: .4em; min-height: 40px; padding: .4em 1.05em;
+  border-radius: 999px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--text);
+  cursor: pointer; font-weight: 500; font-size: .95rem; white-space: nowrap; }
+.btn:hover { border-color: var(--text); }
+.btn.primary { background: var(--text); color: var(--bg); border-color: var(--text); }
+.btn.hl { background: var(--hl); color: var(--hl-text); border-color: var(--hl); }
+.btn.danger { color: var(--danger); border-color: var(--danger); background: transparent; }
+.btn.danger-fill { background: var(--danger); color: #fff; border-color: var(--danger); }
+.btn.small { min-height: 32px; padding: .2em .8em; font-size: .875rem; }
+.btn:disabled { opacity: .45; cursor: not-allowed; }
+.icon-btn { width: 38px; height: 38px; display: inline-grid; place-items: center; padding: 0; flex: none; border-radius: 50%;
+  border: 1px solid var(--line-strong); background: var(--surface); color: var(--text); cursor: pointer; font-size: 1.1rem; line-height: 1; }
+.icon-btn:hover { border-color: var(--text); }
+.icon-btn:disabled { opacity: .35; cursor: default; }
+.icon-btn svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; }
+.icon-btn.plain { border-color: transparent; background: transparent; }
+
+input[type=text], input[type=url], input[type=number], input[type=date], input[type=time], input[type=search], select, textarea {
+  width: 100%; min-height: 40px; padding: .4em .7em; border: 1px solid var(--line-strong); border-radius: 8px;
+  background: var(--surface); color: var(--text); }
+textarea { resize: vertical; min-height: 90px; line-height: 1.45; }
+.field { display: flex; flex-direction: column; gap: .3rem; min-width: 0; }
+.field > span { font-size: .85rem; color: var(--muted); font-weight: 500; }
+.check { display: inline-flex; align-items: center; gap: .5em; cursor: pointer; }
+.check input { width: 18px; height: 18px; accent-color: var(--hl); margin: 0; }
+.btn-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+
+/* ===== Gästeansicht ===== */
+.g-wrap { max-width: 560px; margin: 0 auto; padding: 34px 20px 48px; }
+.g-wrap.has-tabs { padding-bottom: 116px; }
+.g-head { text-align: center; margin-bottom: 26px; }
+.g-head.compact { margin-bottom: 18px; }
+.g-head.compact .g-title { font-size: clamp(1.5rem, 6vw, 2rem); }
+.g-title { font-family: var(--serif); font-weight: 600; font-size: clamp(2.1rem, 9vw, 3.1rem); line-height: 1.04;
+  letter-spacing: -.015em; margin: 0; text-wrap: balance; overflow-wrap: anywhere; }
+.g-sub { margin: .55rem 0 0; color: var(--muted); }
+.g-sub + .g-sub { margin-top: .05rem; }
+.orn { display: block; width: 150px; height: 14px; margin: 18px auto 0; fill: none; stroke: var(--accent); stroke-width: 1; }
+.orn .dot { fill: var(--accent); stroke: none; }
+.g-intro { text-align: center; margin: 0 0 18px; font-size: 1.05rem; text-wrap: pretty; }
+.search { position: relative; display: block; }
+.search svg { position: absolute; left: 19px; top: 50%; transform: translateY(-50%); width: 20px; height: 20px;
+  fill: none; stroke: var(--muted); stroke-width: 2; stroke-linecap: round; pointer-events: none; }
+.search input { height: 58px; padding: 0 20px 0 50px; font-size: 1.15rem; border-radius: 999px; border: 1.5px solid var(--text); }
+.search input::placeholder { color: var(--muted); }
+.results { list-style: none; margin: 14px 0 0; padding: 0; display: grid; gap: 8px; }
+.result { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 13px 18px;
+  border: 1px solid var(--line); border-radius: 14px; background: var(--surface); cursor: pointer; text-align: left; }
+.result:hover { border-color: var(--text); }
+.r-name { font-weight: 500; font-size: 1.05rem; display: flex; flex-direction: column; min-width: 0; overflow-wrap: anywhere; }
+.r-name small { color: var(--muted); font-weight: 400; }
+.r-table { font-family: var(--serif); font-weight: 600; font-size: 1.15rem; white-space: nowrap; color: var(--hl); }
+.r-table.none { font-family: var(--sans); font-weight: 400; font-size: .9rem; color: var(--muted); }
+.g-none, .g-empty { text-align: center; color: var(--muted); margin: 18px 0 0; text-wrap: pretty; }
+
+.next-banner { display: flex; align-items: baseline; flex-wrap: wrap; gap: 2px 12px; width: 100%; margin: 0 0 24px; padding: 12px 16px;
+  border-radius: 12px; border: 1px solid var(--accent); background: var(--accent-soft); color: var(--text); text-align: left; cursor: pointer; }
+.nb-label { font-size: .88rem; color: var(--muted); }
+.nb-time { font-family: var(--serif); font-weight: 600; font-size: 1.15rem; }
+.nb-title { font-weight: 500; }
+
+.placecard { max-width: 420px; margin: 0 auto; padding: 9px; background: var(--surface); border-radius: 4px;
+  box-shadow: 0 1px 0 var(--line), 0 24px 46px -24px rgba(16, 22, 48, .5); }
+.pc-in { border: 1px solid var(--accent); box-shadow: inset 0 0 0 4px var(--surface), inset 0 0 0 5px var(--accent);
+  padding: 30px 22px 28px; text-align: center; }
+.pc-hello { margin: 0; color: var(--muted); }
+.pc-name { font-family: var(--serif); font-style: italic; font-weight: 500; font-size: clamp(1.6rem, 7vw, 2.1rem);
+  line-height: 1.15; margin: .15rem 0 0; text-wrap: balance; overflow-wrap: anywhere; }
+.pc-count { margin: .3rem 0 0; color: var(--muted); }
+.pc-orn { display: block; width: 110px; height: 12px; margin: 18px auto 14px; fill: none; stroke: var(--accent); stroke-width: 1; }
+.pc-orn .dot { fill: var(--accent); stroke: none; }
+.pc-label { margin: 0; color: var(--muted); }
+.pc-num { margin: .05rem 0 0; font-family: var(--serif); font-weight: 600; font-size: clamp(5rem, 26vw, 7.5rem);
+  line-height: .95; color: var(--hl); font-variant-numeric: lining-nums; overflow-wrap: anywhere; }
+.pc-num.word { font-size: clamp(2.2rem, 10vw, 3.2rem); line-height: 1.1; }
+.pc-missing { margin: 0; text-wrap: pretty; }
+.pc-floor { margin: .45rem 0 0; color: var(--muted); font-size: 1.05rem; }
+.r-table small { display: block; font-family: var(--sans); font-weight: 400; font-size: .78rem; color: var(--muted); text-align: right; }
+.step-title { font-weight: 600; margin: 18px 0 8px; }
+.plan-head + .step-title { margin-top: 4px; }
+.g-floors { margin: 0 0 12px; flex-wrap: wrap; }
+.placecard.reveal { animation: cardIn .8s cubic-bezier(.2, .75, .25, 1) both; }
+@keyframes cardIn { from { opacity: 0; transform: perspective(1000px) rotateX(-75deg) translateY(-12px); } to { opacity: 1; transform: none; } }
+
+.g-section { margin-top: 32px; }
+.g-section h3, .g-h2 { font-family: var(--serif); font-weight: 600; font-size: 1.4rem; line-height: 1.2; margin: 0 0 12px; }
+.plan-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
+.plan-head h3, .plan-head .g-h2 { margin: 0; }
+.plan-caption { color: var(--muted); font-size: .92rem; margin: .6rem 0 0; }
+.zoom { display: flex; gap: 6px; }
+.mates { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.mates li { padding: 5px 12px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); font-size: .95rem; }
+.g-again { text-align: center; margin-top: 32px; }
+
+.timeline { list-style: none; margin: 0; padding: 0; }
+.timeline li { display: grid; grid-template-columns: 4.2rem 1fr; gap: 0 26px; padding: 11px 0; position: relative; }
+.timeline li::before { content: ""; position: absolute; left: calc(4.2rem + 13px); top: 0; bottom: 0; width: 1px; background: var(--line-strong); }
+.timeline li:first-child::before { top: 1.3rem; }
+.timeline li:last-child::before { bottom: calc(100% - 1.3rem); }
+.timeline li::after { content: ""; position: absolute; left: calc(4.2rem + 8px); top: 1.05rem; width: 11px; height: 11px;
+  border-radius: 50%; background: var(--bg); border: 1.5px solid var(--accent); }
+.timeline li.next::after { background: var(--hl); border-color: var(--hl); }
+.tl-time { font-family: var(--serif); font-weight: 600; font-size: 1.2rem; text-align: right; line-height: 1.35; font-variant-numeric: lining-nums tabular-nums; }
+.tl-title { margin: 0; font-weight: 500; font-size: 1.08rem; }
+.tl-desc { margin: .1rem 0 0; color: var(--muted); }
+.timeline li.past .tl-time, .timeline li.past .tl-title { color: var(--muted); }
+.tag { display: inline-block; margin-left: 8px; padding: 0 9px; border-radius: 999px; background: var(--hl); color: var(--hl-text);
+  font-size: .78rem; font-weight: 500; vertical-align: 2px; }
+.tag.now { background: var(--accent); color: #fff; }
+
+.menu-cat { margin-bottom: 28px; }
+.menu-cat h3 { font-family: var(--serif); font-style: italic; font-weight: 500; font-size: 1.4rem; margin: 0 0 6px; }
+.menu-list { list-style: none; margin: 0; padding: 0; }
+.menu-list li { padding: 8px 0; }
+.mi-row { display: flex; align-items: baseline; gap: 8px; }
+.mi-name { font-weight: 500; }
+.mi-dots { flex: 1; min-width: 16px; border-bottom: 1px dotted var(--line-strong); transform: translateY(-4px); }
+.mi-price { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.mi-desc { margin: .1rem 0 0; color: var(--muted); font-size: .92rem; }
+
+.tabbar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; display: flex; justify-content: center; gap: 4px;
+  padding: 6px 10px calc(6px + env(safe-area-inset-bottom, 0px)); border-top: 1px solid var(--line);
+  background: color-mix(in srgb, var(--surface) 92%, transparent); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+.tabbar button { flex: 1; max-width: 130px; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 7px 4px;
+  border: 0; border-radius: 10px; background: none; color: var(--muted); font-size: .8rem; font-weight: 500; cursor: pointer; }
+.tabbar svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.tabbar button[aria-current=page] { color: var(--hl); }
+.g-foot { text-align: center; margin-top: 44px; }
+.linkish { background: none; border: 0; padding: 8px; color: var(--muted); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; font-size: .9rem; }
+.preview-pill { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 25; display: flex; align-items: center; justify-content: center;
+  gap: 12px; flex-wrap: wrap; padding: 8px 12px; background: var(--text); color: var(--bg); font-size: .92rem; }
+
+/* ===== Saalplan (SVG) ===== */
+.plan-box { position: relative; border: 1px solid var(--line); border-radius: 12px; background: var(--plan-bg); overflow: auto; -webkit-overflow-scrolling: touch; }
+.plan-box svg { display: block; width: 100%; height: auto; max-width: none; user-select: none; -webkit-user-select: none; }
+.plan-box text { pointer-events: none; }
+.plan-box .room { fill: var(--plan-bg); }
+.plan-box .room-line { fill: none; stroke: var(--plan-stroke); stroke-width: 1.4; }
+.plan-box .gridl { fill: none; stroke: var(--plan-grid); stroke-width: .35; }
+.plan-box .fl-a { fill: var(--floor-a); }
+.plan-box .fl-b { fill: var(--floor-b); }
+.plan-box .hatch { stroke: var(--line-strong); stroke-width: .6; }
+.plan-box .zone { fill: var(--zone); stroke: var(--line-strong); stroke-width: .5; }
+.plan-box .zone-dance { stroke: var(--accent); stroke-width: .7; }
+.plan-box .zone-entrance { fill: var(--accent-soft); stroke: var(--accent); stroke-width: .8; }
+.plan-box .zone-label { fill: var(--muted); font-family: var(--sans); font-weight: 500; paint-order: stroke; stroke: var(--plan-bg);
+  stroke-width: 1px; stroke-linejoin: round; }
+.plan-box .zone-entrance + .zone-label, .plan-box .zone-label.strong { fill: var(--text); }
+.plan-box .zone-stairs, .plan-box .zone-lift { fill: var(--surface-2); stroke: var(--plan-stroke); stroke-width: .5; }
+.plan-box .step-line { stroke: var(--line-strong); stroke-width: .45; }
+.plan-box .hlz .zone { fill: var(--hl); stroke: var(--hl); }
+.plan-box .hlz .step-line { stroke: var(--hl-text); opacity: .45; }
+.plan-box .hlz .zone-label { fill: var(--hl-text); stroke: var(--hl); }
+.plan-box .chair { fill: var(--chair); }
+.plan-box .t-top { fill: var(--table); stroke: var(--plan-stroke); stroke-width: .55; }
+.plan-box .t-num { fill: var(--text); font-family: var(--serif); font-weight: 600; }
+.plan-box .dim .t-top { fill: var(--table-dim); stroke: var(--line-strong); }
+.plan-box .dim .t-num { fill: var(--muted); }
+.plan-box .dim .chair { opacity: .55; }
+.plan-box .hl .t-top { fill: var(--hl); stroke: var(--hl); }
+.plan-box .hl .t-num { fill: var(--hl-text); }
+.plan-box .hl .chair { fill: var(--hl); opacity: .5; }
+.plan-box .pulse { fill: none; stroke: var(--hl); stroke-width: 1; transform-box: fill-box; transform-origin: center; animation: pulse 2.2s ease-out infinite; }
+@keyframes pulse { 0% { transform: scale(.95); opacity: .9; } 100% { transform: scale(1.55); opacity: 0; } }
+.plan-box .route { fill: none; stroke: var(--hl); stroke-width: 1.1; stroke-dasharray: 2.6 2.2; stroke-linecap: round; }
+.plan-box .arrowhead, .plan-box .route-start { fill: var(--hl); }
+.plan-box .occ { font-family: var(--sans); font-weight: 600; }
+.plan-box .occ.ok { fill: var(--ok); }
+.plan-box .occ.full { fill: var(--text); }
+.plan-box .occ.over { fill: var(--danger); }
+.plan-box .occ.empty { fill: var(--muted); }
+.plan-box .sel-box { fill: none; stroke: var(--accent); stroke-width: .7; stroke-dasharray: 2 1.4; }
+.plan-box .sel .t-top { stroke: var(--accent); stroke-width: 1.1; }
+.editor { touch-action: pan-x pan-y; }
+.editor svg .it { cursor: grab; touch-action: none; }
+.editor svg .it:active { cursor: grabbing; }
+.editor svg .it:hover .t-top, .editor svg .it:hover .zone { stroke: var(--accent); }
+
+/* ===== Verwaltung ===== */
+.a-shell { display: grid; grid-template-columns: 232px minmax(0, 1fr); }
+.a-side, .a-main { min-width: 0; }
+.a-side { position: sticky; top: env(safe-area-inset-top, 0px); align-self: start; display: flex; flex-direction: column; gap: 20px; padding: 28px 16px; }
+.a-brand-name { font-family: var(--serif); font-weight: 600; font-size: 1.35rem; line-height: 1.15; margin: 0; overflow-wrap: anywhere; }
+.a-brand-sub { margin: .2rem 0 0; color: var(--muted); font-size: .9rem; }
+.a-nav { display: flex; flex-direction: column; gap: 2px; }
+.a-nav button { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 9px 12px; border: 0; border-radius: 10px;
+  background: none; color: var(--text); font-weight: 500; text-align: left; cursor: pointer; }
+.a-nav button:hover { background: var(--surface-2); }
+.a-nav button[aria-current=page] { background: var(--surface); box-shadow: inset 3px 0 0 var(--hl); }
+.cnt { color: var(--muted); font-size: .85rem; font-weight: 400; font-variant-numeric: tabular-nums; }
+.a-main { padding: 32px 36px 150px; min-width: 0; max-width: 1180px; }
+.a-h { font-family: var(--serif); font-weight: 600; font-size: 2.15rem; line-height: 1.1; margin: 0 0 6px; }
+.a-lead { color: var(--muted); margin: 0 0 22px; max-width: 68ch; }
+.a-sec { margin-top: 32px; }
+.a-sec > h2 { font-size: 1.1rem; font-weight: 600; margin: 0 0 12px; }
+.hint { color: var(--muted); font-size: .88rem; margin: .5rem 0 0; }
+.banner { display: flex; align-items: center; justify-content: space-between; gap: 12px 16px; flex-wrap: wrap; padding: 14px 16px;
+  border-radius: 12px; border: 1px solid var(--accent); background: var(--accent-soft); margin-bottom: 22px; }
+.banner > div:first-child { flex: 1 1 320px; }
+.banner.warn { border-color: var(--warn); background: var(--surface); }
+
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1px; margin: 22px 0 0; padding: 0;
+  background: var(--line); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+.stats > div { background: var(--surface); padding: 14px 16px; }
+.stats dt { color: var(--muted); font-size: .88rem; }
+.stats dd { margin: .15rem 0 0; font-family: var(--serif); font-size: 1.9rem; font-weight: 600; line-height: 1.1; font-variant-numeric: lining-nums; }
+.stats dd small { font-family: var(--sans); font-size: .85rem; font-weight: 400; color: var(--muted); }
+.stats dd.warn { color: var(--warn); }
+.issues { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+.issues li { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 11px 0; border-bottom: 1px solid var(--line); }
+.ok-line { color: var(--ok); margin: 0; }
+
+.addrow { display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap; padding: 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; }
+.addrow .grow { flex: 1 1 220px; }
+.addrow .w-sm { flex: 0 0 92px; }
+.addrow .w-md { flex: 0 0 130px; }
+.toolbar { display: flex; gap: 10px 14px; align-items: center; flex-wrap: wrap; margin: 26px 0 8px; }
+.toolbar input[type=search] { flex: 1 1 200px; width: auto; }
+.toolbar select { width: auto; }
+.spacer { flex: 1; }
+.gl-head, .gl-row { display: grid; grid-template-columns: minmax(0, 1fr) 86px 180px 40px; gap: 8px; align-items: center; }
+.gl-head { color: var(--muted); font-size: .85rem; padding: 8px 0; border-bottom: 1px solid var(--line); }
+.gl-row { padding: 4px 0; border-bottom: 1px solid var(--line); }
+.gl input.cell, .gl select.cell, .prog-row input, .me-row input { border-color: transparent; background: transparent; }
+.gl input.cell:hover, .gl select.cell:hover, .prog-row input:hover, .me-row input:hover { border-color: var(--line); }
+.gl input.cell:focus, .gl select.cell:focus, .prog-row input:focus, .me-row input:focus { border-color: var(--text); background: var(--surface); }
+.gl-row.unassigned select { color: var(--warn); }
+.gl-empty { color: var(--muted); padding: 18px 0; margin: 0; }
+.import { margin: 8px 0 18px; padding: 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; display: grid; gap: 12px; }
+.import p { margin: 0; }
+.import-sum { font-weight: 500; }
+.import-prev { width: 100%; border-collapse: collapse; font-size: .92rem; }
+.import-prev th, .import-prev td { text-align: left; padding: 4px 8px; border-bottom: 1px solid var(--line); }
+.import-prev th { color: var(--muted); font-weight: 500; }
+.file-btn { position: relative; overflow: hidden; }
+.file-btn input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+
+.plan-tools { display: flex; flex-wrap: wrap; gap: 12px 22px; align-items: center; margin-bottom: 14px; }
+.tool-group { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.tool-group select { width: auto; min-height: 32px; padding: .15em .5em; }
+.room-size input { width: 66px; min-height: 32px; padding: .15em .4em; text-align: center; }
+.plan-layout { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 18px; align-items: start; }
+.plan-props { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 18px; display: flex; flex-direction: column; gap: 12px; }
+.plan-props h2 { font-family: var(--serif); font-weight: 600; font-size: 1.45rem; line-height: 1.15; margin: 0; overflow-wrap: anywhere; }
+.plan-props h3 { font-size: .95rem; font-weight: 600; margin: 6px 0 0; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.plan-props p { margin: 0; }
+.seg { display: inline-flex; align-self: flex-start; border: 1px solid var(--line-strong); border-radius: 999px; padding: 2px; }
+.seg button { border: 0; background: none; padding: 5px 14px; border-radius: 999px; cursor: pointer; color: var(--text); }
+.seg button.on { background: var(--text); color: var(--bg); }
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.occ-chip { font-size: .8rem; font-weight: 500; padding: 1px 9px; border-radius: 999px; background: var(--surface-2); color: var(--muted); white-space: nowrap; }
+.occ-chip.over { background: var(--danger); color: #fff; }
+.mini-list { margin: 0; padding-left: 1.1rem; font-size: .93rem; }
+.item-list { display: flex; flex-wrap: wrap; gap: 6px; }
+.item-list button { border: 1px solid var(--line); background: var(--surface-2); border-radius: 8px; padding: 4px 9px; cursor: pointer; color: var(--text); font-size: .88rem; }
+.item-list button.over { border-color: var(--danger); color: var(--danger); }
+.item-list button:hover { border-color: var(--text); }
+.plan-box.small { max-width: 760px; }
+.floor-h { font-size: .95rem; font-weight: 600; color: var(--muted); margin: 18px 0 8px; }
+.floor-bar { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid var(--line); }
+.floor-tab { border: 1px solid var(--line-strong); background: var(--surface); color: var(--text); border-radius: 999px; padding: 5px 14px; cursor: pointer; font-weight: 500; min-height: 34px; }
+.floor-tab:hover { border-color: var(--text); }
+.floor-tab.on { background: var(--text); color: var(--bg); border-color: var(--text); }
+.floor-tab.on .cnt { color: inherit; opacity: .7; }
+.floor-tools { align-items: flex-end; }
+.floor-name { width: 230px; }
+.floor-name input { min-height: 32px; padding: .15em .5em; }
+.small-only { display: none; margin: -4px 0 12px; }
+
+.prog-row { display: grid; grid-template-columns: 124px minmax(0, 1fr) minmax(0, 1.4fr) 40px; gap: 8px; align-items: center; padding: 4px 0; border-bottom: 1px solid var(--line); }
+.prog-list { border-top: 1px solid var(--line); margin-bottom: 16px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: 18px; }
+.chip { border: 1px dashed var(--line-strong); background: none; border-radius: 999px; padding: 4px 12px; cursor: pointer; color: var(--text); font-size: .9rem; }
+.chip:hover { border-style: solid; border-color: var(--text); }
+.menu-edit { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px 16px; margin-bottom: 16px; }
+.me-head { display: flex; gap: 10px; align-items: center; margin-bottom: 8px; }
+.me-head input { font-family: var(--serif); font-size: 1.25rem; font-weight: 600; border-color: transparent; background: transparent; }
+.me-head input:focus, .me-head input:hover { border-color: var(--line-strong); }
+.me-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr) 104px auto; gap: 8px; align-items: center; padding: 2px 0; }
+.me-btns { display: flex; gap: 2px; }
+.me-items { margin-bottom: 10px; }
+
+.steps { margin: 0 0 24px; padding-left: 1.3rem; max-width: 66ch; }
+.steps li { margin: .35rem 0; }
+.qr-wrap { display: flex; gap: 28px; flex-wrap: wrap; align-items: flex-start; margin-top: 24px; }
+.poster-prev { margin: 0; width: min(320px, 100%); aspect-ratio: 1 / 1.414; background: #fff; color: #18213D; border-radius: 3px; padding: 26px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; text-align: center;
+  box-shadow: 0 20px 40px -22px rgba(0, 0, 0, .5); outline: 1px solid #A8844C; outline-offset: -11px; }
+.pp-title { font-family: var(--serif); font-weight: 600; font-size: 1.35rem; line-height: 1.1; margin: 0; overflow-wrap: anywhere; }
+.pp-qr { width: 74%; }
+.pp-qr svg { display: block; width: 100%; height: auto; }
+.pp-text { font-family: var(--serif); font-style: italic; margin: 0; font-size: 1.02rem; }
+.qr-actions { display: flex; flex-direction: column; gap: 10px; align-items: flex-start; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; max-width: 640px; }
+.form-grid .span2 { grid-column: 1 / -1; }
+.opt-list { display: grid; gap: 10px; }
+
+/* ===== Speicherleiste, Hinweise, Dialoge ===== */
+.savebar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 30; display: flex; justify-content: center; pointer-events: none;
+  padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px)); }
+.savebar-in { pointer-events: auto; display: flex; align-items: center; gap: 10px; padding: 7px 7px 7px 18px; border-radius: 999px;
+  background: var(--text); color: var(--bg); box-shadow: 0 14px 34px -12px rgba(0, 0, 0, .45); }
+.savebar .btn.inv { background: transparent; color: var(--bg); border-color: color-mix(in srgb, var(--bg) 45%, transparent); }
+.toast { position: fixed; left: 50%; bottom: calc(86px + env(safe-area-inset-bottom, 0px)); z-index: 60; transform: translate(-50%, 16px); opacity: 0;
+  pointer-events: none; display: flex; gap: 12px; align-items: center; width: max-content; max-width: min(92vw, 560px); padding: 10px 12px 10px 18px;
+  border-radius: 14px; background: var(--text); color: var(--bg); box-shadow: 0 14px 30px -12px rgba(0, 0, 0, .45); transition: opacity .2s, transform .2s; }
+.toast.show { opacity: 1; transform: translate(-50%, 0); pointer-events: auto; }
+.toast .btn { background: transparent; color: var(--bg); border-color: color-mix(in srgb, var(--bg) 45%, transparent); }
+.modal-ov { position: fixed; inset: 0; z-index: 70; display: grid; place-items: center; padding: 20px; background: rgba(10, 14, 30, .5); }
+.modal { width: 100%; max-width: 440px; padding: 22px; border-radius: 16px; background: var(--surface); color: var(--text); box-shadow: 0 24px 60px -20px rgba(0, 0, 0, .5); }
+.modal h2 { font-family: var(--serif); font-weight: 600; font-size: 1.45rem; margin: 0 0 8px; }
+.modal p { margin: 0; }
+.modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
+#print-area { display: none; }
+
+/* ===== Kleinere Bildschirme ===== */
+@media (max-width: 1100px) { .plan-layout { grid-template-columns: 1fr; } }
+@media (max-width: 899px) {
+  .a-shell { grid-template-columns: minmax(0, 1fr); }
+  .a-side { z-index: 15; gap: 10px; padding: 14px 16px 0; background: var(--bg); border-bottom: 1px solid var(--line); }
+  .a-brand { padding-right: 140px; }
+  .a-brand-name { font-size: 1.15rem; }
+  .a-brand-sub { display: none; }
+  .a-side-foot { position: absolute; right: 14px; top: 12px; }
+  .a-nav { flex-direction: row; overflow-x: auto; scrollbar-width: none; margin: 0 -16px; padding: 0 12px 8px; }
+  .a-nav::-webkit-scrollbar { display: none; }
+  .a-nav button { flex: none; white-space: nowrap; padding: 8px 11px; }
+  .a-nav button[aria-current=page] { box-shadow: inset 0 -2px 0 var(--hl); }
+  .a-main { padding: 22px 16px 150px; }
+  .a-h { font-size: 1.75rem; }
+}
+@media (max-width: 680px) {
+  .small-only { display: block; }
+  .gl-head { display: none; }
+  .gl-row { grid-template-columns: minmax(0, 1fr) 66px 40px; row-gap: 0; padding: 6px 0; }
+  .gl-row select.cell { grid-column: 1 / 3; grid-row: 2; }
+  .prog-row { grid-template-columns: 112px minmax(0, 1fr) 40px; }
+  .prog-row [data-p=desc] { grid-column: 1 / 3; }
+  .me-row { grid-template-columns: minmax(0, 1fr) 92px; padding: 6px 0; border-bottom: 1px solid var(--line); }
+  .me-row [data-mi=desc] { grid-column: 1 / 3; }
+  .me-btns { grid-column: 1 / 3; justify-content: flex-end; }
+  .form-grid { grid-template-columns: 1fr; }
+  .issues li { flex-direction: column; align-items: flex-start; gap: 6px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .placecard.reveal, .plan-box .pulse { animation: none; }
+  .toast { transition: none; }
+}
+@media print {
+  @page { size: A4; margin: 0; }
+  body > *:not(#print-area) { display: none !important; }
+  #print-area { display: block; }
+  #print-area img { display: block; width: 100%; height: auto; }
+}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="application/json" id="ball-data">{"v":1,"isDemo":true,"updatedAt":"2026-10-04T19:35:06.934Z","event":{"name":"Ball des SZ Ybbs","date":"2026-10-03","time":"19:00","location":"Stadthalle Ybbs","welcome":"","guestUrl":""},"floors":[{"id":"eg","name":"Erdgeschoss","w":600,"h":300}],"options":{"showProgram":true,"showMenu":true,"showTablemates":true},"tables":[{"id":"t001","label":"1","shape":"round","seats":8,"x":28,"y":52,"w":18,"h":18,"floorId":"eg"},{"id":"t002","label":"2","shape":"round","seats":8,"x":70,"y":52,"w":18,"h":18,"floorId":"eg"},{"id":"t003","label":"3","shape":"round","seats":8,"x":28,"y":92,"w":18,"h":18,"floorId":"eg"},{"id":"t004","label":"4","shape":"round","seats":8,"x":70,"y":92,"w":18,"h":18,"floorId":"eg"},{"id":"t005","label":"5","shape":"round","seats":8,"x":28,"y":132,"w":18,"h":18,"floorId":"eg"},{"id":"t006","label":"6","shape":"round","seats":8,"x":70,"y":132,"w":18,"h":18,"floorId":"eg"},{"id":"t007","label":"7","shape":"round","seats":8,"x":230,"y":52,"w":18,"h":18,"floorId":"eg"},{"id":"t008","label":"8","shape":"round","seats":8,"x":272,"y":52,"w":18,"h":18,"floorId":"eg"},{"id":"t009","label":"9","shape":"round","seats":8,"x":230,"y":92,"w":18,"h":18,"floorId":"eg"},{"id":"t00a","label":"10","shape":"round","seats":8,"x":272,"y":92,"w":18,"h":18,"floorId":"eg"},{"id":"t00b","label":"11","shape":"round","seats":8,"x":230,"y":132,"w":18,"h":18,"floorId":"eg"},{"id":"t00c","label":"12","shape":"round","seats":8,"x":272,"y":132,"w":18,"h":18,"floorId":"eg"},{"id":"t00d","label":"13","shape":"rect","seats":8,"x":118,"y":140,"w":24,"h":9,"floorId":"eg"},{"id":"t00e","label":"14","shape":"rect","seats":8,"x":182,"y":140,"w":24,"h":9,"floorId":"eg"}],"objects":[{"id":"o00f","type":"stage","label":"","x":570,"y":150,"w":22,"h":200,"floorId":"eg"},{"id":"o00g","type":"dance","label":"","x":425,"y":120,"w":100,"h":64,"floorId":"eg"},{"id":"o00h","type":"entrance","label":"","x":150,"y":196,"w":26,"h":6,"floorId":"eg"},{"id":"o00i","type":"bar","label":"","x":40,"y":186,"w":56,"h":10,"floorId":"eg"},{"id":"o00j","type":"buffet","label":"","x":260,"y":186,"w":56,"h":10,"floorId":"eg"}],"guests":[{"id":"g00k","name":"Anna Gruber","count":2,"tableId":"t001"},{"id":"g00l","name":"Lukas Hofer","count":1,"tableId":"t001"},{"id":"g00m","name":"Familie Steiner","count":4,"tableId":"t002"},{"id":"g00n","name":"Sophie Wagner","count":1,"tableId":"t003"},{"id":"g00o","name":"David Pichler","count":1,"tableId":"t003"},{"id":"g00p","name":"Julia Huber","count":2,"tableId":"t004"},{"id":"g00q","name":"Elias Mayer","count":1,"tableId":"t005"},{"id":"g00r","name":"Lena Bauer","count":1,"tableId":"t005"},{"id":"g00s","name":"Tobias Wimmer","count":1,"tableId":"t006"},{"id":"g00t","name":"Katharina Moser","count":2,"tableId":"t007"},{"id":"g00u","name":"Jonas Leitner","count":1,"tableId":"t007"},{"id":"g00v","name":"Marie Eder","count":1,"tableId":"t008"},{"id":"g00w","name":"Felix Fuchs","count":1,"tableId":"t009"},{"id":"g00x","name":"Hannah Schwarz","count":2,"tableId":"t00a"},{"id":"g00y","name":"Maximilian Brunner","count":1,"tableId":"t00b"},{"id":"g00z","name":"Laura Reiter","count":1,"tableId":"t00c"},{"id":"g010","name":"Direktion","count":6,"tableId":"t00d"},{"id":"g011","name":"Elternverein","count":6,"tableId":"t00e"},{"id":"g012","name":"Simon Berger","count":1,"tableId":""}],"program":[{"id":"p013","time":"19:00","title":"Einlass","desc":"Garderobe gleich links vom Eingang"},{"id":"p015","time":"21:00","title":"Polonaise","desc":"Feierlicher Einzug und Eröffnungstanz"},{"id":"p017","time":"23:30","title":"Tombola","desc":""},{"id":"p018","time":"00:00","title":"Mitternachtseinlage","desc":""},{"id":"p019","time":"03:00","title":"Letzter Tanz","desc":""},{"id":"p8m17ppnsm","time":"00:30","title":"Tombola Abholung","desc":"1. OG"}],"menu":[{"id":"m01a","title":"Speisen","items":[{"id":"i01b","name":"Schnitzelsemmel","desc":"","price":"5,50"},{"id":"i01c","name":"Würstel mit Senf und Gebäck","desc":"","price":"4,50"},{"id":"i01d","name":"Käseplatte","desc":"mit Brot und Gurkerl","price":"7,00"}]},{"id":"m01e","title":"Alkoholfreie Getränke","items":[{"id":"i01g","name":"Cola","desc":"0,33 l","price":"3,00"},{"id":"i01f","name":"Mineralwasser","desc":"0,5 l","price":"2,50"},{"id":"i01h","name":"Apfelsaft gespritzt","desc":"0,5 l","price":"3,00"}]},{"id":"m01i","title":"Bier & Wein","items":[{"id":"i01j","name":"Bier","desc":"0,5 l","price":"4,50"},{"id":"i01k","name":"Weißer Spritzer","desc":"0,25 l","price":"3,00"},{"id":"i01l","name":"Grüner Veltliner","desc":"1/8 l","price":"3,50"}]}]}</script>
+<script id="qr-lib">var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],f={},c=function(t,r){o=function(t){for(var r=new Array(t),e=0;e<t;e+=1){r[e]=new Array(t);for(var n=0;n<t;n+=1)r[e][n]=null}return r}(i=4*e+17),l(0,0),l(i-7,0),l(0,i-7),s(),h(),d(t,r),e>=7&&v(t),null==a&&(a=p(e,n,u)),w(a,r)},l=function(t,r){for(var e=-1;e<=7;e+=1)if(!(t+e<=-1||i<=t+e))for(var n=-1;n<=7;n+=1)r+n<=-1||i<=r+n||(o[t+e][r+n]=0<=e&&e<=6&&(0==n||6==n)||0<=n&&n<=6&&(0==e||6==e)||2<=e&&e<=4&&2<=n&&n<=4)},h=function(){for(var t=8;t<i-8;t+=1)null==o[t][6]&&(o[t][6]=t%2==0);for(var r=8;r<i-8;r+=1)null==o[6][r]&&(o[6][r]=r%2==0)},s=function(){for(var t=B.getPatternPosition(e),r=0;r<t.length;r+=1)for(var n=0;n<t.length;n+=1){var i=t[r],a=t[n];if(null==o[i][a])for(var u=-2;u<=2;u+=1)for(var f=-2;f<=2;f+=1)o[i+u][a+f]=-2==u||2==u||-2==f||2==f||0==u&&0==f}},v=function(t){for(var r=B.getBCHTypeNumber(e),n=0;n<18;n+=1){var a=!t&&1==(r>>n&1);o[Math.floor(n/3)][n%3+i-8-3]=a}for(n=0;n<18;n+=1){a=!t&&1==(r>>n&1);o[n%3+i-8-3][Math.floor(n/3)]=a}},d=function(t,r){for(var e=n<<3|r,a=B.getBCHTypeInfo(e),u=0;u<15;u+=1){var f=!t&&1==(a>>u&1);u<6?o[u][8]=f:u<8?o[u+1][8]=f:o[i-15+u][8]=f}for(u=0;u<15;u+=1){f=!t&&1==(a>>u&1);u<8?o[8][i-u-1]=f:u<9?o[8][15-u-1+1]=f:o[8][15-u-1]=f}o[i-8][8]=!t},w=function(t,r){for(var e=-1,n=i-1,a=7,u=0,f=B.getMaskFunction(r),c=i-1;c>0;c-=2)for(6==c&&(c-=1);;){for(var g=0;g<2;g+=1)if(null==o[n][c-g]){var l=!1;u<t.length&&(l=1==(t[u]>>>a&1)),f(n,c-g)&&(l=!l),o[n][c-g]=l,-1==(a-=1)&&(u+=1,a=7)}if((n+=e)<0||i<=n){n-=e,e=-e;break}}},p=function(t,r,e){for(var n=A.getRSBlocks(t,r),o=b(),i=0;i<e.length;i+=1){var a=e[i];o.put(a.getMode(),4),o.put(a.getLength(),B.getLengthInBits(a.getMode(),t)),a.write(o)}var u=0;for(i=0;i<n.length;i+=1)u+=n[i].dataCount;if(o.getLengthInBits()>8*u)throw"code length overflow. ("+o.getLengthInBits()+">"+8*u+")";for(o.getLengthInBits()+4<=8*u&&o.put(0,4);o.getLengthInBits()%8!=0;)o.putBit(!1);for(;!(o.getLengthInBits()>=8*u||(o.put(236,8),o.getLengthInBits()>=8*u));)o.put(17,8);return function(t,r){for(var e=0,n=0,o=0,i=new Array(r.length),a=new Array(r.length),u=0;u<r.length;u+=1){var f=r[u].dataCount,c=r[u].totalCount-f;n=Math.max(n,f),o=Math.max(o,c),i[u]=new Array(f);for(var g=0;g<i[u].length;g+=1)i[u][g]=255&t.getBuffer()[g+e];e+=f;var l=B.getErrorCorrectPolynomial(c),h=k(i[u],l.getLength()-1).mod(l);for(a[u]=new Array(l.getLength()-1),g=0;g<a[u].length;g+=1){var s=g+h.getLength()-a[u].length;a[u][g]=s>=0?h.getAt(s):0}}var v=0;for(g=0;g<r.length;g+=1)v+=r[g].totalCount;var d=new Array(v),w=0;for(g=0;g<n;g+=1)for(u=0;u<r.length;u+=1)g<i[u].length&&(d[w]=i[u][g],w+=1);for(g=0;g<o;g+=1)for(u=0;u<r.length;u+=1)g<a[u].length&&(d[w]=a[u][g],w+=1);return d}(o,n)};f.addData=function(t,r){var e=null;switch(r=r||"Byte"){case"Numeric":e=M(t);break;case"Alphanumeric":e=x(t);break;case"Byte":e=m(t);break;case"Kanji":e=L(t);break;default:throw"mode:"+r}u.push(e),a=null},f.isDark=function(t,r){if(t<0||i<=t||r<0||i<=r)throw t+","+r;return o[t][r]},f.getModuleCount=function(){return i},f.make=function(){if(e<1){for(var t=1;t<40;t++){for(var r=A.getRSBlocks(t,n),o=b(),i=0;i<u.length;i++){var a=u[i];o.put(a.getMode(),4),o.put(a.getLength(),B.getLengthInBits(a.getMode(),t)),a.write(o)}var g=0;for(i=0;i<r.length;i++)g+=r[i].dataCount;if(o.getLengthInBits()<=8*g)break}e=t}c(!1,function(){for(var t=0,r=0,e=0;e<8;e+=1){c(!0,e);var n=B.getLostPoint(f);(0==e||t>n)&&(t=n,r=e)}return r}())},f.createTableTag=function(t,r){t=t||2;var e="";e+='<table style="',e+=" border-width: 0px; border-style: none;",e+=" border-collapse: collapse;",e+=" padding: 0px; margin: "+(r=void 0===r?4*t:r)+"px;",e+='">',e+="<tbody>";for(var n=0;n<f.getModuleCount();n+=1){e+="<tr>";for(var o=0;o<f.getModuleCount();o+=1)e+='<td style="',e+=" border-width: 0px; border-style: none;",e+=" border-collapse: collapse;",e+=" padding: 0px; margin: 0px;",e+=" width: "+t+"px;",e+=" height: "+t+"px;",e+=" background-color: ",e+=f.isDark(n,o)?"#000000":"#ffffff",e+=";",e+='"/>';e+="</tr>"}return e+="</tbody>",e+="</table>"},f.createSvgTag=function(t,r,e,n){var o={};"object"==typeof arguments[0]&&(t=(o=arguments[0]).cellSize,r=o.margin,e=o.alt,n=o.title),t=t||2,r=void 0===r?4*t:r,(e="string"==typeof e?{text:e}:e||{}).text=e.text||null,e.id=e.text?e.id||"qrcode-description":null,(n="string"==typeof n?{text:n}:n||{}).text=n.text||null,n.id=n.text?n.id||"qrcode-title":null;var i,a,u,c,g=f.getModuleCount()*t+2*r,l="";for(c="l"+t+",0 0,"+t+" -"+t+",0 0,-"+t+"z ",l+='<svg version="1.1" xmlns="http://www.w3.org/2000/svg"',l+=o.scalable?"":' width="'+g+'px" height="'+g+'px"',l+=' viewBox="0 0 '+g+" "+g+'" ',l+=' preserveAspectRatio="xMinYMin meet"',l+=n.text||e.text?' role="img" aria-labelledby="'+y([n.id,e.id].join(" ").trim())+'"':"",l+=">",l+=n.text?'<title id="'+y(n.id)+'">'+y(n.text)+"</title>":"",l+=e.text?'<description id="'+y(e.id)+'">'+y(e.text)+"</description>":"",l+='<rect width="100%" height="100%" fill="white" cx="0" cy="0"/>',l+='<path d="',a=0;a<f.getModuleCount();a+=1)for(u=a*t+r,i=0;i<f.getModuleCount();i+=1)f.isDark(a,i)&&(l+="M"+(i*t+r)+","+u+c);return l+='" stroke="transparent" fill="black"/>',l+="</svg>"},f.createDataURL=function(t,r){t=t||2,r=void 0===r?4*t:r;var e=f.getModuleCount()*t+2*r,n=r,o=e-r;return I(e,e,function(r,e){if(n<=r&&r<o&&n<=e&&e<o){var i=Math.floor((r-n)/t),a=Math.floor((e-n)/t);return f.isDark(a,i)?0:1}return 1})},f.createImgTag=function(t,r,e){t=t||2,r=void 0===r?4*t:r;var n=f.getModuleCount()*t+2*r,o="";return o+="<img",o+=' src="',o+=f.createDataURL(t,r),o+='"',o+=' width="',o+=n,o+='"',o+=' height="',o+=n,o+='"',e&&(o+=' alt="',o+=y(e),o+='"'),o+="/>"};var y=function(t){for(var r="",e=0;e<t.length;e+=1){var n=t.charAt(e);switch(n){case"<":r+="&lt;";break;case">":r+="&gt;";break;case"&":r+="&amp;";break;case'"':r+="&quot;";break;default:r+=n}}return r};return f.createASCII=function(t,r){if((t=t||1)<2)return function(t){t=void 0===t?2:t;var r,e,n,o,i,a=1*f.getModuleCount()+2*t,u=t,c=a-t,g={"██":"█","█ ":"▀"," █":"▄","  ":" "},l={"██":"▀","█ ":"▀"," █":" ","  ":" "},h="";for(r=0;r<a;r+=2){for(n=Math.floor((r-u)/1),o=Math.floor((r+1-u)/1),e=0;e<a;e+=1)i="█",u<=e&&e<c&&u<=r&&r<c&&f.isDark(n,Math.floor((e-u)/1))&&(i=" "),u<=e&&e<c&&u<=r+1&&r+1<c&&f.isDark(o,Math.floor((e-u)/1))?i+=" ":i+="█",h+=t<1&&r+1>=c?l[i]:g[i];h+="\n"}return a%2&&t>0?h.substring(0,h.length-a-1)+Array(a+1).join("▀"):h.substring(0,h.length-1)}(r);t-=1,r=void 0===r?2*t:r;var e,n,o,i,a=f.getModuleCount()*t+2*r,u=r,c=a-r,g=Array(t+1).join("██"),l=Array(t+1).join("  "),h="",s="";for(e=0;e<a;e+=1){for(o=Math.floor((e-u)/t),s="",n=0;n<a;n+=1)i=1,u<=n&&n<c&&u<=e&&e<c&&f.isDark(o,Math.floor((n-u)/t))&&(i=0),s+=i?g:l;for(o=0;o<t;o+=1)h+=s+"\n"}return h.substring(0,h.length-1)},f.renderTo2dContext=function(t,r){r=r||2;for(var e=f.getModuleCount(),n=0;n<e;n++)for(var o=0;o<e;o++)t.fillStyle=f.isDark(n,o)?"black":"white",t.fillRect(n*r,o*r,r,r)},f};t.stringToBytes=(t.stringToBytesFuncs={default:function(t){for(var r=[],e=0;e<t.length;e+=1){var n=t.charCodeAt(e);r.push(255&n)}return r}}).default,t.createStringToBytes=function(t,r){var e=function(){for(var e=S(t),n=function(){var t=e.read();if(-1==t)throw"eof";return t},o=0,i={};;){var a=e.read();if(-1==a)break;var u=n(),f=n()<<8|n();i[String.fromCharCode(a<<8|u)]=f,o+=1}if(o!=r)throw o+" != "+r;return i}(),n="?".charCodeAt(0);return function(t){for(var r=[],o=0;o<t.length;o+=1){var i=t.charCodeAt(o);if(i<128)r.push(i);else{var a=e[t.charAt(o)];"number"==typeof a?(255&a)==a?r.push(a):(r.push(a>>>8),r.push(255&a)):r.push(n)}}return r}};var r,e,n,o,i,a=1,u=2,f=4,c=8,g={L:1,M:0,Q:3,H:2},l=0,h=1,s=2,v=3,d=4,w=5,p=6,y=7,B=(r=[[],[6,18],[6,22],[6,26],[6,30],[6,34],[6,22,38],[6,24,42],[6,26,46],[6,28,50],[6,30,54],[6,32,58],[6,34,62],[6,26,46,66],[6,26,48,70],[6,26,50,74],[6,30,54,78],[6,30,56,82],[6,30,58,86],[6,34,62,90],[6,28,50,72,94],[6,26,50,74,98],[6,30,54,78,102],[6,28,54,80,106],[6,32,58,84,110],[6,30,58,86,114],[6,34,62,90,118],[6,26,50,74,98,122],[6,30,54,78,102,126],[6,26,52,78,104,130],[6,30,56,82,108,134],[6,34,60,86,112,138],[6,30,58,86,114,142],[6,34,62,90,118,146],[6,30,54,78,102,126,150],[6,24,50,76,102,128,154],[6,28,54,80,106,132,158],[6,32,58,84,110,136,162],[6,26,54,82,110,138,166],[6,30,58,86,114,142,170]],e=1335,n=7973,i=function(t){for(var r=0;0!=t;)r+=1,t>>>=1;return r},(o={}).getBCHTypeInfo=function(t){for(var r=t<<10;i(r)-i(e)>=0;)r^=e<<i(r)-i(e);return 21522^(t<<10|r)},o.getBCHTypeNumber=function(t){for(var r=t<<12;i(r)-i(n)>=0;)r^=n<<i(r)-i(n);return t<<12|r},o.getPatternPosition=function(t){return r[t-1]},o.getMaskFunction=function(t){switch(t){case l:return function(t,r){return(t+r)%2==0};case h:return function(t,r){return t%2==0};case s:return function(t,r){return r%3==0};case v:return function(t,r){return(t+r)%3==0};case d:return function(t,r){return(Math.floor(t/2)+Math.floor(r/3))%2==0};case w:return function(t,r){return t*r%2+t*r%3==0};case p:return function(t,r){return(t*r%2+t*r%3)%2==0};case y:return function(t,r){return(t*r%3+(t+r)%2)%2==0};default:throw"bad maskPattern:"+t}},o.getErrorCorrectPolynomial=function(t){for(var r=k([1],0),e=0;e<t;e+=1)r=r.multiply(k([1,C.gexp(e)],0));return r},o.getLengthInBits=function(t,r){if(1<=r&&r<10)switch(t){case a:return 10;case u:return 9;case f:case c:return 8;default:throw"mode:"+t}else if(r<27)switch(t){case a:return 12;case u:return 11;case f:return 16;case c:return 10;default:throw"mode:"+t}else{if(!(r<41))throw"type:"+r;switch(t){case a:return 14;case u:return 13;case f:return 16;case c:return 12;default:throw"mode:"+t}}},o.getLostPoint=function(t){for(var r=t.getModuleCount(),e=0,n=0;n<r;n+=1)for(var o=0;o<r;o+=1){for(var i=0,a=t.isDark(n,o),u=-1;u<=1;u+=1)if(!(n+u<0||r<=n+u))for(var f=-1;f<=1;f+=1)o+f<0||r<=o+f||0==u&&0==f||a==t.isDark(n+u,o+f)&&(i+=1);i>5&&(e+=3+i-5)}for(n=0;n<r-1;n+=1)for(o=0;o<r-1;o+=1){var c=0;t.isDark(n,o)&&(c+=1),t.isDark(n+1,o)&&(c+=1),t.isDark(n,o+1)&&(c+=1),t.isDark(n+1,o+1)&&(c+=1),0!=c&&4!=c||(e+=3)}for(n=0;n<r;n+=1)for(o=0;o<r-6;o+=1)t.isDark(n,o)&&!t.isDark(n,o+1)&&t.isDark(n,o+2)&&t.isDark(n,o+3)&&t.isDark(n,o+4)&&!t.isDark(n,o+5)&&t.isDark(n,o+6)&&(e+=40);for(o=0;o<r;o+=1)for(n=0;n<r-6;n+=1)t.isDark(n,o)&&!t.isDark(n+1,o)&&t.isDark(n+2,o)&&t.isDark(n+3,o)&&t.isDark(n+4,o)&&!t.isDark(n+5,o)&&t.isDark(n+6,o)&&(e+=40);var g=0;for(o=0;o<r;o+=1)for(n=0;n<r;n+=1)t.isDark(n,o)&&(g+=1);return e+=Math.abs(100*g/r/r-50)/5*10},o),C=function(){for(var t=new Array(256),r=new Array(256),e=0;e<8;e+=1)t[e]=1<<e;for(e=8;e<256;e+=1)t[e]=t[e-4]^t[e-5]^t[e-6]^t[e-8];for(e=0;e<255;e+=1)r[t[e]]=e;var n={glog:function(t){if(t<1)throw"glog("+t+")";return r[t]},gexp:function(r){for(;r<0;)r+=255;for(;r>=256;)r-=255;return t[r]}};return n}();function k(t,r){if(void 0===t.length)throw t.length+"/"+r;var e=function(){for(var e=0;e<t.length&&0==t[e];)e+=1;for(var n=new Array(t.length-e+r),o=0;o<t.length-e;o+=1)n[o]=t[o+e];return n}(),n={getAt:function(t){return e[t]},getLength:function(){return e.length},multiply:function(t){for(var r=new Array(n.getLength()+t.getLength()-1),e=0;e<n.getLength();e+=1)for(var o=0;o<t.getLength();o+=1)r[e+o]^=C.gexp(C.glog(n.getAt(e))+C.glog(t.getAt(o)));return k(r,0)},mod:function(t){if(n.getLength()-t.getLength()<0)return n;for(var r=C.glog(n.getAt(0))-C.glog(t.getAt(0)),e=new Array(n.getLength()),o=0;o<n.getLength();o+=1)e[o]=n.getAt(o);for(o=0;o<t.getLength();o+=1)e[o]^=C.gexp(C.glog(t.getAt(o))+r);return k(e,0).mod(t)}};return n}var A=function(){var t=[[1,26,19],[1,26,16],[1,26,13],[1,26,9],[1,44,34],[1,44,28],[1,44,22],[1,44,16],[1,70,55],[1,70,44],[2,35,17],[2,35,13],[1,100,80],[2,50,32],[2,50,24],[4,25,9],[1,134,108],[2,67,43],[2,33,15,2,34,16],[2,33,11,2,34,12],[2,86,68],[4,43,27],[4,43,19],[4,43,15],[2,98,78],[4,49,31],[2,32,14,4,33,15],[4,39,13,1,40,14],[2,121,97],[2,60,38,2,61,39],[4,40,18,2,41,19],[4,40,14,2,41,15],[2,146,116],[3,58,36,2,59,37],[4,36,16,4,37,17],[4,36,12,4,37,13],[2,86,68,2,87,69],[4,69,43,1,70,44],[6,43,19,2,44,20],[6,43,15,2,44,16],[4,101,81],[1,80,50,4,81,51],[4,50,22,4,51,23],[3,36,12,8,37,13],[2,116,92,2,117,93],[6,58,36,2,59,37],[4,46,20,6,47,21],[7,42,14,4,43,15],[4,133,107],[8,59,37,1,60,38],[8,44,20,4,45,21],[12,33,11,4,34,12],[3,145,115,1,146,116],[4,64,40,5,65,41],[11,36,16,5,37,17],[11,36,12,5,37,13],[5,109,87,1,110,88],[5,65,41,5,66,42],[5,54,24,7,55,25],[11,36,12,7,37,13],[5,122,98,1,123,99],[7,73,45,3,74,46],[15,43,19,2,44,20],[3,45,15,13,46,16],[1,135,107,5,136,108],[10,74,46,1,75,47],[1,50,22,15,51,23],[2,42,14,17,43,15],[5,150,120,1,151,121],[9,69,43,4,70,44],[17,50,22,1,51,23],[2,42,14,19,43,15],[3,141,113,4,142,114],[3,70,44,11,71,45],[17,47,21,4,48,22],[9,39,13,16,40,14],[3,135,107,5,136,108],[3,67,41,13,68,42],[15,54,24,5,55,25],[15,43,15,10,44,16],[4,144,116,4,145,117],[17,68,42],[17,50,22,6,51,23],[19,46,16,6,47,17],[2,139,111,7,140,112],[17,74,46],[7,54,24,16,55,25],[34,37,13],[4,151,121,5,152,122],[4,75,47,14,76,48],[11,54,24,14,55,25],[16,45,15,14,46,16],[6,147,117,4,148,118],[6,73,45,14,74,46],[11,54,24,16,55,25],[30,46,16,2,47,17],[8,132,106,4,133,107],[8,75,47,13,76,48],[7,54,24,22,55,25],[22,45,15,13,46,16],[10,142,114,2,143,115],[19,74,46,4,75,47],[28,50,22,6,51,23],[33,46,16,4,47,17],[8,152,122,4,153,123],[22,73,45,3,74,46],[8,53,23,26,54,24],[12,45,15,28,46,16],[3,147,117,10,148,118],[3,73,45,23,74,46],[4,54,24,31,55,25],[11,45,15,31,46,16],[7,146,116,7,147,117],[21,73,45,7,74,46],[1,53,23,37,54,24],[19,45,15,26,46,16],[5,145,115,10,146,116],[19,75,47,10,76,48],[15,54,24,25,55,25],[23,45,15,25,46,16],[13,145,115,3,146,116],[2,74,46,29,75,47],[42,54,24,1,55,25],[23,45,15,28,46,16],[17,145,115],[10,74,46,23,75,47],[10,54,24,35,55,25],[19,45,15,35,46,16],[17,145,115,1,146,116],[14,74,46,21,75,47],[29,54,24,19,55,25],[11,45,15,46,46,16],[13,145,115,6,146,116],[14,74,46,23,75,47],[44,54,24,7,55,25],[59,46,16,1,47,17],[12,151,121,7,152,122],[12,75,47,26,76,48],[39,54,24,14,55,25],[22,45,15,41,46,16],[6,151,121,14,152,122],[6,75,47,34,76,48],[46,54,24,10,55,25],[2,45,15,64,46,16],[17,152,122,4,153,123],[29,74,46,14,75,47],[49,54,24,10,55,25],[24,45,15,46,46,16],[4,152,122,18,153,123],[13,74,46,32,75,47],[48,54,24,14,55,25],[42,45,15,32,46,16],[20,147,117,4,148,118],[40,75,47,7,76,48],[43,54,24,22,55,25],[10,45,15,67,46,16],[19,148,118,6,149,119],[18,75,47,31,76,48],[34,54,24,34,55,25],[20,45,15,61,46,16]],r=function(t,r){var e={};return e.totalCount=t,e.dataCount=r,e},e={};return e.getRSBlocks=function(e,n){var o=function(r,e){switch(e){case g.L:return t[4*(r-1)+0];case g.M:return t[4*(r-1)+1];case g.Q:return t[4*(r-1)+2];case g.H:return t[4*(r-1)+3];default:return}}(e,n);if(void 0===o)throw"bad rs block @ typeNumber:"+e+"/errorCorrectionLevel:"+n;for(var i=o.length/3,a=[],u=0;u<i;u+=1)for(var f=o[3*u+0],c=o[3*u+1],l=o[3*u+2],h=0;h<f;h+=1)a.push(r(c,l));return a},e}(),b=function(){var t=[],r=0,e={getBuffer:function(){return t},getAt:function(r){var e=Math.floor(r/8);return 1==(t[e]>>>7-r%8&1)},put:function(t,r){for(var n=0;n<r;n+=1)e.putBit(1==(t>>>r-n-1&1))},getLengthInBits:function(){return r},putBit:function(e){var n=Math.floor(r/8);t.length<=n&&t.push(0),e&&(t[n]|=128>>>r%8),r+=1}};return e},M=function(t){var r=a,e=t,n={getMode:function(){return r},getLength:function(t){return e.length},write:function(t){for(var r=e,n=0;n+2<r.length;)t.put(o(r.substring(n,n+3)),10),n+=3;n<r.length&&(r.length-n==1?t.put(o(r.substring(n,n+1)),4):r.length-n==2&&t.put(o(r.substring(n,n+2)),7))}},o=function(t){for(var r=0,e=0;e<t.length;e+=1)r=10*r+i(t.charAt(e));return r},i=function(t){if("0"<=t&&t<="9")return t.charCodeAt(0)-"0".charCodeAt(0);throw"illegal char :"+t};return n},x=function(t){var r=u,e=t,n={getMode:function(){return r},getLength:function(t){return e.length},write:function(t){for(var r=e,n=0;n+1<r.length;)t.put(45*o(r.charAt(n))+o(r.charAt(n+1)),11),n+=2;n<r.length&&t.put(o(r.charAt(n)),6)}},o=function(t){if("0"<=t&&t<="9")return t.charCodeAt(0)-"0".charCodeAt(0);if("A"<=t&&t<="Z")return t.charCodeAt(0)-"A".charCodeAt(0)+10;switch(t){case" ":return 36;case"$":return 37;case"%":return 38;case"*":return 39;case"+":return 40;case"-":return 41;case".":return 42;case"/":return 43;case":":return 44;default:throw"illegal char :"+t}};return n},m=function(r){var e=f,n=t.stringToBytes(r),o={getMode:function(){return e},getLength:function(t){return n.length},write:function(t){for(var r=0;r<n.length;r+=1)t.put(n[r],8)}};return o},L=function(r){var e=c,n=t.stringToBytesFuncs.SJIS;if(!n)throw"sjis not supported.";!function(){var t=n("友");if(2!=t.length||38726!=(t[0]<<8|t[1]))throw"sjis not supported."}();var o=n(r),i={getMode:function(){return e},getLength:function(t){return~~(o.length/2)},write:function(t){for(var r=o,e=0;e+1<r.length;){var n=(255&r[e])<<8|255&r[e+1];if(33088<=n&&n<=40956)n-=33088;else{if(!(57408<=n&&n<=60351))throw"illegal char at "+(e+1)+"/"+n;n-=49472}n=192*(n>>>8&255)+(255&n),t.put(n,13),e+=2}if(e<r.length)throw"illegal char at "+(e+1)}};return i},D=function(){var t=[],r={writeByte:function(r){t.push(255&r)},writeShort:function(t){r.writeByte(t),r.writeByte(t>>>8)},writeBytes:function(t,e,n){e=e||0,n=n||t.length;for(var o=0;o<n;o+=1)r.writeByte(t[o+e])},writeString:function(t){for(var e=0;e<t.length;e+=1)r.writeByte(t.charCodeAt(e))},toByteArray:function(){return t},toString:function(){var r="";r+="[";for(var e=0;e<t.length;e+=1)e>0&&(r+=","),r+=t[e];return r+="]"}};return r},S=function(t){var r=t,e=0,n=0,o=0,i={read:function(){for(;o<8;){if(e>=r.length){if(0==o)return-1;throw"unexpected end of file./"+o}var t=r.charAt(e);if(e+=1,"="==t)return o=0,-1;t.match(/^\s$/)||(n=n<<6|a(t.charCodeAt(0)),o+=6)}var i=n>>>o-8&255;return o-=8,i}},a=function(t){if(65<=t&&t<=90)return t-65;if(97<=t&&t<=122)return t-97+26;if(48<=t&&t<=57)return t-48+52;if(43==t)return 62;if(47==t)return 63;throw"c:"+t};return i},I=function(t,r,e){for(var n=function(t,r){var e=t,n=r,o=new Array(t*r),i={setPixel:function(t,r,n){o[r*e+t]=n},write:function(t){t.writeString("GIF87a"),t.writeShort(e),t.writeShort(n),t.writeByte(128),t.writeByte(0),t.writeByte(0),t.writeByte(0),t.writeByte(0),t.writeByte(0),t.writeByte(255),t.writeByte(255),t.writeByte(255),t.writeString(","),t.writeShort(0),t.writeShort(0),t.writeShort(e),t.writeShort(n),t.writeByte(0);var r=a(2);t.writeByte(2);for(var o=0;r.length-o>255;)t.writeByte(255),t.writeBytes(r,o,255),o+=255;t.writeByte(r.length-o),t.writeBytes(r,o,r.length-o),t.writeByte(0),t.writeString(";")}},a=function(t){for(var r=1<<t,e=1+(1<<t),n=t+1,i=u(),a=0;a<r;a+=1)i.add(String.fromCharCode(a));i.add(String.fromCharCode(r)),i.add(String.fromCharCode(e));var f,c,g,l=D(),h=(f=l,c=0,g=0,{write:function(t,r){if(t>>>r!=0)throw"length over";for(;c+r>=8;)f.writeByte(255&(t<<c|g)),r-=8-c,t>>>=8-c,g=0,c=0;g|=t<<c,c+=r},flush:function(){c>0&&f.writeByte(g)}});h.write(r,n);var s=0,v=String.fromCharCode(o[s]);for(s+=1;s<o.length;){var d=String.fromCharCode(o[s]);s+=1,i.contains(v+d)?v+=d:(h.write(i.indexOf(v),n),i.size()<4095&&(i.size()==1<<n&&(n+=1),i.add(v+d)),v=d)}return h.write(i.indexOf(v),n),h.write(e,n),h.flush(),l.toByteArray()},u=function(){var t={},r=0,e={add:function(n){if(e.contains(n))throw"dup key:"+n;t[n]=r,r+=1},size:function(){return r},indexOf:function(r){return t[r]},contains:function(r){return void 0!==t[r]}};return e};return i}(t,r),o=0;o<r;o+=1)for(var i=0;i<t;i+=1)n.setPixel(i,o,e(i,o));var a=D();n.write(a);for(var u=function(){var t=0,r=0,e=0,n="",o={},i=function(t){n+=String.fromCharCode(a(63&t))},a=function(t){if(t<0);else{if(t<26)return 65+t;if(t<52)return t-26+97;if(t<62)return t-52+48;if(62==t)return 43;if(63==t)return 47}throw"n:"+t};return o.writeByte=function(n){for(t=t<<8|255&n,r+=8,e+=1;r>=6;)i(t>>>r-6),r-=6},o.flush=function(){if(r>0&&(i(t<<6-r),t=0,r=0),e%3!=0)for(var o=3-e%3,a=0;a<o;a+=1)n+="="},o.toString=function(){return n},o}(),f=a.toByteArray(),c=0;c<f.length;c+=1)u.writeByte(f[c]);return u.flush(),"data:image/gif;base64,"+u};return t}();qrcode.stringToBytesFuncs["UTF-8"]=function(t){return function(t){for(var r=[],e=0;e<t.length;e++){var n=t.charCodeAt(e);n<128?r.push(n):n<2048?r.push(192|n>>6,128|63&n):n<55296||n>=57344?r.push(224|n>>12,128|n>>6&63,128|63&n):(e++,n=65536+((1023&n)<<10|1023&t.charCodeAt(e)),r.push(240|n>>18,128|n>>12&63,128|n>>6&63,128|63&n))}return r}(t)},function(t){"function"==typeof define&&define.amd?define([],t):"object"==typeof exports&&(module.exports=t())}(function(){return qrcode});</script>
+<script id="app">/* Tischplan für den Ball: Gäste scannen den QR-Code, suchen ihren Namen und sehen ihren Tisch. */
+(function () {
+  'use strict';
+
+  // ===================================================================
+  // 1. Quelltext merken – daraus wird beim Speichern die neue Seite gebaut
+  // ===================================================================
+  const SRC = {
+    style: document.getElementById('app-style').textContent,
+    qr: document.getElementById('qr-lib').textContent,
+    app: document.getElementById('app').textContent,
+  };
+  const FONT_URL = 'https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..800;1,6..96,400..800&family=Jost:wght@400;500;600&display=swap';
+  const DRAFT_KEY = 'ballplan-draft-v1';
+  const UI_KEY = 'ballplan-ui-v1';
+  const ME_KEY = 'ballplan-me-v1';
+  const root = document.getElementById('root');
+
+  // ===================================================================
+  // 2. Kleine Helfer
+  // ===================================================================
+  const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+  const uid = () => Math.random().toString(36).slice(2, 8) + Date.now().toString(36).slice(-4);
+  const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
+  const natCmp = (a, b) => String(a).localeCompare(String(b), 'de', { numeric: true, sensitivity: 'base' });
+  const num = (v, fallback) => { const n = parseFloat(String(v).replace(',', '.')); return Number.isFinite(n) ? n : fallback; };
+  const toM = (dm) => String(Math.round(dm) / 10).replace('.', ',');          // Dezimeter -> "1,8"
+  const fromM = (v) => { const n = num(v, NaN); return Number.isFinite(n) ? Math.round(n * 10) : NaN; }; // "1,8" -> 18
+  const str = (v, max) => String(v == null ? '' : v).slice(0, max || 200);
+
+  function storageArea(area) { try { return window[area + 'Storage']; } catch (e) { return null; } }
+  const store = {
+    get(key, area = 'local') { try { const v = storageArea(area).getItem(key); return v ? JSON.parse(v) : null; } catch (e) { return null; } },
+    set(key, val, area = 'local') { try { storageArea(area).setItem(key, JSON.stringify(val)); } catch (e) { /* nicht verfügbar */ } },
+    del(key, area = 'local') { try { storageArea(area).removeItem(key); } catch (e) { /* nicht verfügbar */ } },
+  };
+
+  // Namen vergleichbar machen: Groß/klein, Umlaute (ä = ae = a), Akzente
+  function canon(s) {
+    return String(s || '').toLowerCase()
+      .replace(/ä/g, 'a').replace(/ö/g, 'o').replace(/ü/g, 'u').replace(/ß/g, 'ss')
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      .replace(/ae/g, 'a').replace(/oe/g, 'o').replace(/ue/g, 'u');
+  }
+  const tokens = (s) => canon(s).split(/[^a-z0-9]+/).filter(Boolean);
+
+  function levenshtein(a, b) {
+    const row = Array.from({ length: b.length + 1 }, (_, i) => i);
+    for (let i = 1; i <= a.length; i++) {
+      let prev = row[0]; row[0] = i;
+      for (let j = 1; j <= b.length; j++) {
+        const tmp = row[j];
+        row[j] = Math.min(row[j] + 1, row[j - 1] + 1, prev + (a[i - 1] === b[j - 1] ? 0 : 1));
+        prev = tmp;
+      }
+    }
+    return row[b.length];
+  }
+
+  const ICON = {
+    seat: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="5"/><circle cx="12" cy="3.6" r="1.5"/><circle cx="12" cy="20.4" r="1.5"/><circle cx="3.6" cy="12" r="1.5"/><circle cx="20.4" cy="12" r="1.5"/></svg>',
+    clock: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>',
+    glass: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3.5h10l-.8 5.5a4.2 4.2 0 0 1-8.4 0z"/><path d="M12 13.2v6.8M8.5 20.5h7"/></svg>',
+    map: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="15" rx="1.2"/><path d="M3.5 10h6v9.5M14.5 4.5V10h6"/></svg>',
+    search: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 20 20"/></svg>',
+    x: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>',
+    up: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"/></svg>',
+    down: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg>',
+  };
+  const ORNAMENT = '<svg class="orn" viewBox="0 0 160 14" aria-hidden="true"><path d="M4 7H62M98 7H156"/><path d="M80 2l5 5-5 5-5-5z"/><circle class="dot" cx="69" cy="7" r="1.4"/><circle class="dot" cx="91" cy="7" r="1.4"/></svg>';
+  const PC_ORNAMENT = '<svg class="pc-orn" viewBox="0 0 110 12" aria-hidden="true"><path d="M2 6H44M66 6H108"/><path d="M55 1.5l4.5 4.5-4.5 4.5-4.5-4.5z"/></svg>';
+
+  // ===================================================================
+  // 3. Daten
+  // ===================================================================
+  // Alle Maße im Saalplan sind in Dezimetern (10 = 1 Meter).
+  const OBJ = {
+    stage: { name: 'Bühne', w: 90, h: 22 },
+    dance: { name: 'Tanzfläche', w: 100, h: 64 },
+    entrance: { name: 'Eingang', w: 26, h: 6 },
+    stairs: { name: 'Treppe', w: 18, h: 26 },
+    lift: { name: 'Lift', w: 14, h: 14 },
+    bar: { name: 'Bar', w: 56, h: 10 },
+    buffet: { name: 'Buffet', w: 56, h: 10 },
+    cloak: { name: 'Garderobe', w: 36, h: 8 },
+    wc: { name: 'WC', w: 18, h: 14 },
+    other: { name: 'Bereich', w: 30, h: 20 },
+  };
+
+  const CONNECT = ['stairs', 'lift']; // verbinden die Geschosse
+  function emptyState() {
+    return {
+      v: 1, isDemo: false, updatedAt: '',
+      event: { name: 'Unser Ball', date: '', time: '', location: '', welcome: '', guestUrl: '' },
+      floors: [{ id: 'eg', name: 'Erdgeschoss', w: 300, h: 200 }],
+      options: { showProgram: true, showMenu: true, showTablemates: true },
+      tables: [], objects: [], guests: [], program: [], menu: [],
+    };
+  }
+
+  // Bringt geladene Daten in eine sichere, vollständige Form
+  function normalizeState(raw) {
+    const s = emptyState();
+    if (!raw || typeof raw !== 'object') return s;
+    const arr = (a) => (Array.isArray(a) ? a : []);
+    s.isDemo = !!raw.isDemo;
+    s.updatedAt = str(raw.updatedAt, 40);
+    const ev = raw.event || {};
+    for (const k of Object.keys(s.event)) s.event[k] = str(ev[k], k === 'welcome' ? 600 : 300);
+    const size = (v, d) => clamp(Math.round(num(v, d)), 60, 2000);
+    const floors = arr(raw.floors).map((f) => ({ id: str(f.id, 40) || uid(), name: str(f.name, 40), w: size(f.w, 300), h: size(f.h, 200) }));
+    if (!floors.length) {
+      // Ältere Version ohne Geschosse: alles kommt ins Erdgeschoss
+      const rm = raw.room || {};
+      floors.push({ id: 'eg', name: 'Erdgeschoss', w: size(rm.w, 300), h: size(rm.h, 200) });
+    }
+    s.floors = floors;
+    const floorIds = new Set(floors.map((f) => f.id));
+    const onFl = (id) => (floorIds.has(id) ? id : floors[0].id);
+    const op = raw.options || {};
+    for (const k of Object.keys(s.options)) if (k in op) s.options[k] = !!op[k];
+    s.tables = arr(raw.tables).map((t) => ({
+      id: str(t.id, 40) || uid(), label: str(t.label, 30), shape: t.shape === 'rect' ? 'rect' : 'round',
+      seats: clamp(Math.round(num(t.seats, 8)), 1, 60), x: num(t.x, 50), y: num(t.y, 50),
+      w: clamp(num(t.w, 18), 4, 400), h: clamp(num(t.h, 18), 4, 400), floorId: onFl(t.floorId),
+    }));
+    s.objects = arr(raw.objects).map((o) => ({
+      id: str(o.id, 40) || uid(), type: OBJ[o.type] ? o.type : 'other', label: str(o.label, 40),
+      x: num(o.x, 50), y: num(o.y, 50), w: clamp(num(o.w, 30), 2, 2000), h: clamp(num(o.h, 20), 2, 2000), floorId: onFl(o.floorId),
+    }));
+    const tableIds = new Set(s.tables.map((t) => t.id));
+    s.guests = arr(raw.guests).map((g) => ({
+      id: str(g.id, 40) || uid(), name: str(g.name, 120), count: clamp(Math.round(num(g.count, 1)), 1, 50),
+      tableId: tableIds.has(g.tableId) ? g.tableId : '',
+    }));
+    s.program = arr(raw.program).map((p) => ({
+      id: str(p.id, 40) || uid(), time: /^\d{1,2}:\d{2}$/.test(p.time || '') ? p.time : '', title: str(p.title, 120), desc: str(p.desc, 300),
+    }));
+    s.menu = arr(raw.menu).map((c) => ({
+      id: str(c.id, 40) || uid(), title: str(c.title, 80),
+      items: arr(c.items).map((i) => ({ id: str(i.id, 40) || uid(), name: str(i.name, 120), desc: str(i.desc, 200), price: str(i.price, 30) })),
+    }));
+    return s;
+  }
+
+  let state;
+  try { state = normalizeState(JSON.parse(document.getElementById('ball-data').textContent)); } catch (e) { state = emptyState(); }
+  let published = JSON.stringify(state); // Stand der veröffentlichten Version
+
+  const tableById = (id) => state.tables.find((t) => t.id === id) || null;
+  const tableName = (t) => (!t ? '' : /^\d/.test(t.label) ? 'Tisch ' + t.label : (t.label || 'Tisch'));
+  const sumPersons = () => state.guests.reduce((n, g) => n + g.count, 0);
+  function occupancy() {
+    const m = {};
+    for (const g of state.guests) if (g.tableId) m[g.tableId] = (m[g.tableId] || 0) + g.count;
+    return m;
+  }
+  function findItem(id) {
+    const t = state.tables.find((x) => x.id === id);
+    if (t) return { kind: 'table', item: t };
+    const o = state.objects.find((x) => x.id === id);
+    return o ? { kind: 'obj', item: o } : null;
+  }
+  const floorById = (id) => state.floors.find((f) => f.id === id) || state.floors[0];
+  const floorOf = (it) => floorById(it.floorId);
+  const multiFloor = () => state.floors.length > 1;
+  const floorName = (f) => (f && f.name.trim()) || 'Geschoss';
+  const onFloor = (list, f) => list.filter((it) => it.floorId === f.id);
+  const tableWhere = (t) => (multiFloor() ? `${tableName(t)} (${floorName(floorOf(t))})` : tableName(t));
+  // Aktuell bearbeitetes Geschoss im Saalplan-Editor
+  function curFloor() {
+    const f = state.floors.find((x) => x.id === ui.floor) || state.floors[0];
+    ui.floor = f.id;
+    return f;
+  }
+  const nearest = (list, p) => list.slice().sort((a, b) => Math.hypot(a.x - p.x, a.y - p.y) - Math.hypot(b.x - p.x, b.y - p.y))[0] || null;
+  function overlapsOthers(it) {
+    return state.tables.concat(state.objects).some((o) => o.id !== it.id && o.floorId === it.floorId
+      && Math.abs(o.x - it.x) < (o.w + it.w) / 2 + 3 && Math.abs(o.y - it.y) < (o.h + it.h) / 2 + 3);
+  }
+  function nextTableLabel(s) {
+    const nums = s.tables.map((t) => parseInt(t.label, 10)).filter(Number.isFinite);
+    return String(nums.length ? Math.max(...nums) + 1 : 1);
+  }
+  // Sucht einen freien Platz im Saal (Zeile für Zeile von oben links)
+  function findFreeSpot(s, w, h, ignoreId, floorId) {
+    const f = s.floors.find((x) => x.id === floorId) || s.floors[0];
+    const W = f.w, H = f.h, m = 14; // Platz für Stühle und einen Gang
+    const items = s.tables.concat(s.objects).filter((it) => it.id !== ignoreId && it.floorId === f.id);
+    for (let y = Math.ceil(h / 2 + m); y <= H - h / 2 - 2; y += 5) {
+      for (let x = Math.ceil(w / 2 + m); x <= W - w / 2 - 2; x += 5) {
+        if (items.every((it) => Math.abs(it.x - x) >= (it.w + w) / 2 + m || Math.abs(it.y - y) >= (it.h + h) / 2 + m)) return { x, y };
+      }
+    }
+    return { x: Math.round(W / 2), y: Math.round(H / 2) };
+  }
+  function newTable(s, shape, label, floorId) {
+    const w = shape === 'rect' ? 24 : 18, h = shape === 'rect' ? 9 : 18;
+    const fid = floorId || s.floors[0].id;
+    const p = findFreeSpot(s, w, h, null, fid);
+    return { id: uid(), label: label || nextTableLabel(s), shape, seats: 8, x: p.x, y: p.y, w, h, floorId: fid };
+  }
+  function ensureTable(s, label, floorId) {
+    const key = canon(label);
+    let t = s.tables.find((x) => canon(x.label) === key);
+    if (!t) { t = newTable(s, 'round', label, floorId); s.tables.push(t); }
+    return t;
+  }
+
+  // Uhrzeiten eines Balls: alles vor 12:00 gehört schon zum nächsten Tag
+  function ballMin(t) {
+    const m = /^(\d{1,2}):(\d{2})$/.exec(t || '');
+    if (!m) return 99999;
+    let mins = (+m[1]) * 60 + (+m[2]);
+    if (mins < 12 * 60) mins += 24 * 60;
+    return mins - 12 * 60;
+  }
+  const sortedProgram = () => state.program.slice().sort((a, b) => ballMin(a.time) - ballMin(b.time));
+  // Minuten seit 12:00 am Balltag – oder null, wenn gerade kein Ball ist
+  function nowBallMin() {
+    const now = new Date();
+    let base;
+    if (state.event.date) {
+      base = new Date(state.event.date + 'T12:00:00');
+      if (isNaN(base)) return null;
+    } else {
+      base = new Date(now); base.setHours(12, 0, 0, 0);
+      if (now.getHours() < 12) base.setDate(base.getDate() - 1);
+    }
+    const diff = (now - base) / 60000;
+    return diff < 0 || diff > 20 * 60 ? null : diff;
+  }
+  function nextItem() {
+    const now = nowBallMin();
+    if (now == null) return null;
+    return sortedProgram().find((p) => p.time && p.title.trim() && ballMin(p.time) > now) || null;
+  }
+  function currentItem() {
+    const now = nowBallMin();
+    if (now == null) return null;
+    const started = sortedProgram().filter((p) => p.time && p.title.trim() && ballMin(p.time) <= now);
+    const last = started[started.length - 1];
+    return last && now - ballMin(last.time) < 45 ? last : null;
+  }
+  function fmtPrice(p) {
+    const s = String(p || '').trim();
+    if (!s) return '';
+    const n = s.replace(/€/g, '').trim().replace(',', '.');
+    return /^\d+(\.\d{1,2})?$/.test(n) ? '€ ' + Number(n).toFixed(2).replace('.', ',') : s;
+  }
+  function eventLines() {
+    const e = state.event;
+    let when = '';
+    if (e.date) {
+      const d = new Date(e.date + 'T12:00:00');
+      if (!isNaN(d)) when = d.toLocaleDateString('de-AT', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+    }
+    if (e.time) when += (when ? ', ' : '') + 'ab ' + e.time + ' Uhr';
+    return { when, where: e.location.trim() };
+  }
+
+  // Namenssuche: jedes Suchwort muss zu einem Teil des Namens passen (auch mit kleinem Tippfehler)
+  function tokenScore(q, t) {
+    if (t === q) return 3;
+    if (t.startsWith(q)) return 2;
+    if (q.length >= 4 && (levenshtein(q, t.slice(0, q.length)) <= 1 || levenshtein(q, t) <= 1)) return 1;
+    return 0;
+  }
+  function searchGuests(query) {
+    const qt = tokens(query);
+    if (!qt.length) return [];
+    const hits = [];
+    for (const g of state.guests) {
+      const nt = tokens(g.name);
+      if (!nt.length) continue;
+      let total = 0, ok = true;
+      for (const q of qt) {
+        let best = 0;
+        for (const t of nt) best = Math.max(best, tokenScore(q, t));
+        if (!best) { ok = false; break; }
+        total += best;
+      }
+      if (ok) hits.push({ g, score: total });
+    }
+    hits.sort((a, b) => b.score - a.score || natCmp(a.g.name, b.g.name));
+    return hits.slice(0, 8).map((h) => h.g);
+  }
+
+  // ===================================================================
+  // 4. Oberflächen-Zustand, Änderungen, Rückgängig
+  // ===================================================================
+  const ui = {
+    mode: 'guest', preview: false, gTab: 'seat', meId: null, query: '', reveal: false, zoom: 1, gFloor: null, floor: null,
+    aTab: 'overview', sel: null, snap: true, gFilter: '', gUnassigned: false, gSort: 'name', gShowAll: false, addTable: '',
+    importOpen: false, importText: '', canAdmin: false, adminMaybe: false, readOnly: false, saving: false, draft: null,
+  };
+  const caps = { artifact: null, downloads: null };
+  const undoStack = [];
+  let undoKey = null;
+  let focusAfter = null;
+
+  const isDirty = () => JSON.stringify(state) !== published;
+
+  // Jede Änderung läuft hier durch: merkt den alten Stand fürs Rückgängigmachen
+  function commit(fn, opt = {}) {
+    if (!opt.key || opt.key !== undoKey) {
+      undoStack.push(JSON.stringify(state));
+      if (undoStack.length > 80) undoStack.shift();
+    }
+    undoKey = opt.key || null;
+    fn(state);
+    afterChange(opt.render !== false);
+  }
+  function afterChange(full) {
+    scheduleDraft();
+    if (full) render(); else renderSaveBar();
+  }
+  function undo() {
+    if (!undoStack.length) return;
+    state = normalizeState(JSON.parse(undoStack.pop()));
+    undoKey = null;
+    if (ui.sel && !findItem(ui.sel)) ui.sel = null;
+    afterChange(true);
+    toast('Letzte Änderung rückgängig gemacht.');
+  }
+  let draftTimer = 0;
+  function scheduleDraft() {
+    clearTimeout(draftTimer);
+    draftTimer = setTimeout(() => {
+      if (isDirty()) store.set(DRAFT_KEY, { base: state.updatedAt, at: Date.now(), state });
+      else store.del(DRAFT_KEY);
+    }, 500);
+  }
+
+  // ===================================================================
+  // 5. Saalplan als SVG
+  // ===================================================================
+  let svgSeq = 0;
+  function labelSize(text, w, h) {
+    const len = Math.max(2, String(text).length);
+    return +clamp(Math.min(h * 0.55, (w * 0.9) / (len * 0.56)), 2.2, 9).toFixed(2);
+  }
+  // o.floor: welches Geschoss · o.hl: markierter Tisch · o.hlObj: markierter Bereich · o.route: {from, to}
+  function planSVG(o = {}) {
+    const fl = o.floor || state.floors[0];
+    const W = fl.w, H = fl.h, pad = 9, id = 'pl' + (++svgSeq);
+    const occ = o.occ ? occupancy() : null;
+    let s = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${-pad} ${-pad} ${W + pad * 2} ${H + pad * 2}" role="img" aria-label="${esc(o.label || 'Saalplan')}"${o.zoom > 1 ? ` style="width:${o.zoom * 100}%"` : ''}>`;
+    s += `<defs>
+      <pattern id="${id}f" width="10" height="10" patternUnits="userSpaceOnUse"><rect width="10" height="10" class="fl-a"/><path d="M0 0h5v5H0zM5 5h5v5H5z" class="fl-b"/></pattern>
+      <pattern id="${id}h" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path d="M0 0v4" class="hatch"/></pattern>
+      <pattern id="${id}g" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M10 0H0v10" class="gridl"/></pattern>
+      <marker id="${id}a" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="4.5" markerHeight="4.5" orient="auto"><path d="M0 1L9 5L0 9z" class="arrowhead"/></marker>
+    </defs>`;
+    s += `<rect class="room" x="0" y="0" width="${W}" height="${H}"/>`;
+    if (o.grid) s += `<rect x="0" y="0" width="${W}" height="${H}" fill="url(#${id}g)"/>`;
+    s += `<rect class="room-line" x="0" y="0" width="${W}" height="${H}"/>`;
+    for (const ob of onFloor(state.objects, fl)) s += objSVG(ob, o, id, fl);
+    if (o.route && o.route.from && o.route.to) s += routeSVG(o.route.from, o.route.to, fl, id);
+    for (const t of onFloor(state.tables, fl)) s += tableSVG(t, o, occ);
+    return s + '</svg>';
+  }
+  function objSVG(ob, o, id, fl) {
+    const x = -ob.w / 2, y = -ob.h / 2;
+    const name = ob.label || OBJ[ob.type].name;
+    const fill = ob.type === 'dance' ? ` style="fill:url(#${id}f)"` : '';
+    let inner = `<rect class="zone zone-${ob.type}" x="${x}" y="${y}" width="${ob.w}" height="${ob.h}" rx="${ob.type === 'dance' ? 0 : 1}"${fill}/>`;
+    if (ob.type === 'stage') inner += `<rect x="${x}" y="${y}" width="${ob.w}" height="${ob.h}" fill="url(#${id}h)"/>`;
+    if (ob.type === 'stairs') {
+      // Stufen quer zur Laufrichtung
+      const long = Math.max(ob.w, ob.h), vertical = ob.h >= ob.w;
+      for (let p = -long / 2 + 3; p < long / 2 - 0.5; p += 3) {
+        inner += vertical ? `<path class="step-line" d="M${x} ${p.toFixed(1)}h${ob.w}"/>` : `<path class="step-line" d="M${p.toFixed(1)} ${y}v${ob.h}"/>`;
+      }
+    }
+    if (ob.type === 'entrance') {
+      // Beschriftung neben den Eingang, Richtung Saalmitte
+      const W = fl.w, H = fl.h, fs = 5;
+      const wall = [['b', H - ob.y], ['t', ob.y], ['l', ob.x], ['r', W - ob.x]].sort((a, b) => a[1] - b[1])[0][0];
+      // Beschriftung außen an der Wand, damit die Weglinie sie nicht überdeckt
+      const out = fs * 0.85;
+      const pos = { b: [0, -y + out, 0], t: [0, y - out, 0], l: [x - out, 0, -90], r: [-x + out, 0, 90] }[wall];
+      inner += `<text class="zone-label strong" transform="translate(${pos[0].toFixed(1)} ${pos[1].toFixed(1)}) rotate(${pos[2]})" font-size="${fs}" text-anchor="middle" dominant-baseline="central">${esc(name)}</text>`;
+    } else if (ob.h > ob.w * 1.3) {
+      inner += `<text class="zone-label" transform="rotate(-90)" font-size="${labelSize(name, ob.h, ob.w)}" text-anchor="middle" dominant-baseline="central">${esc(name)}</text>`;
+    } else {
+      inner += `<text class="zone-label" font-size="${labelSize(name, ob.w, ob.h)}" text-anchor="middle" dominant-baseline="central">${esc(name)}</text>`;
+    }
+    const selected = o.sel === ob.id;
+    if (selected) inner += `<rect class="sel-box" x="${x - 1.5}" y="${y - 1.5}" width="${ob.w + 3}" height="${ob.h + 3}"/>`;
+    if (o.hlObj === ob.id) inner = `<rect class="pulse" x="${x - 1.5}" y="${y - 1.5}" width="${ob.w + 3}" height="${ob.h + 3}" rx="2"/>` + inner;
+    return `<g class="it obj${selected ? ' sel' : ''}${o.hlObj === ob.id ? ' hlz' : ''}" data-item="${ob.id}" transform="translate(${ob.x} ${ob.y})">${inner}</g>`;
+  }
+  function tableSVG(t, o, occ) {
+    const cls = ['it', 'table'];
+    const isHl = o.hl && o.hl === t.id;
+    if (isHl) cls.push('hl'); else if (o.hl || o.dim) cls.push('dim');
+    if (o.sel === t.id) cls.push('sel');
+    const n = Math.min(t.seats, 40), cr = 1.9, gap = 2.6;
+    let g = '';
+    if (t.shape === 'round') {
+      const R = t.w / 2 + gap;
+      for (let i = 0; i < n; i++) {
+        const a = (i / n) * Math.PI * 2 - Math.PI / 2;
+        g += `<circle class="chair" cx="${(Math.cos(a) * R).toFixed(2)}" cy="${(Math.sin(a) * R).toFixed(2)}" r="${cr}"/>`;
+      }
+      if (isHl) g += `<circle class="pulse" r="${R + cr}"/>`;
+      g += `<circle class="t-top" r="${t.w / 2}"/>`;
+    } else {
+      const horiz = t.w >= t.h, len = horiz ? t.w : t.h, depth = horiz ? t.h : t.w;
+      const side = (count, sign) => {
+        for (let i = 0; i < count; i++) {
+          const p = (-len / 2 + (len / count) * (i + 0.5)).toFixed(2), off = sign * (depth / 2 + gap);
+          g += horiz ? `<circle class="chair" cx="${p}" cy="${off}" r="${cr}"/>` : `<circle class="chair" cx="${off}" cy="${p}" r="${cr}"/>`;
+        }
+      };
+      side(Math.ceil(n / 2), -1); side(Math.floor(n / 2), 1);
+      if (isHl) g += `<rect class="pulse" x="${-t.w / 2 - gap}" y="${-t.h / 2 - gap}" width="${t.w + gap * 2}" height="${t.h + gap * 2}" rx="3"/>`;
+      g += `<rect class="t-top" x="${-t.w / 2}" y="${-t.h / 2}" width="${t.w}" height="${t.h}" rx="1"/>`;
+    }
+    const label = t.label || '?';
+    const minSide = Math.min(t.w, t.h), maxSide = Math.max(t.w, t.h);
+    const used = occ ? (occ[t.id] || 0) : null;
+    let nx = 0, ny = 0, ox = 0, oy = 0, fs, ofs;
+    if (used == null) {
+      fs = Math.min(minSide * 0.52, (maxSide * 0.82) / (label.length * 0.62));
+    } else if (t.shape === 'round') {
+      fs = Math.min(minSide * 0.42, (minSide * 0.8) / (label.length * 0.62)); ny = -minSide * 0.11; oy = minSide * 0.26; ofs = minSide * 0.18;
+    } else {
+      const horiz = t.w >= t.h;
+      fs = Math.min(minSide * 0.6, (maxSide * 0.4) / (label.length * 0.62)); ofs = minSide * 0.38;
+      if (horiz) { nx = -t.w * 0.2; ox = t.w * 0.24; } else { ny = -t.h * 0.2; oy = t.h * 0.24; }
+    }
+    g += `<text class="t-num" x="${nx.toFixed(2)}" y="${ny.toFixed(2)}" font-size="${clamp(fs, 2.4, 12).toFixed(2)}" text-anchor="middle" dominant-baseline="central">${esc(label)}</text>`;
+    if (used != null) {
+      const st = used > t.seats ? 'over' : used === 0 ? 'empty' : used === t.seats ? 'full' : 'ok';
+      g += `<text class="occ ${st}" x="${ox.toFixed(2)}" y="${oy.toFixed(2)}" font-size="${clamp(ofs, 2, 6).toFixed(2)}" text-anchor="middle" dominant-baseline="central">${used}/${t.seats}</text>`;
+    }
+    if (o.sel === t.id) {
+      const ex = (t.shape === 'round' ? t.w / 2 : t.w / 2) + gap + cr + 1, ey = (t.shape === 'round' ? t.w / 2 : t.h / 2) + gap + cr + 1;
+      g += `<rect class="sel-box" x="${-ex}" y="${-ey}" width="${ex * 2}" height="${ey * 2}" rx="2"/>`;
+    }
+    return `<g class="${cls.join(' ')}" data-item="${t.id}" transform="translate(${t.x} ${t.y})">${g}</g>`;
+  }
+  // Punkt auf dem Rand eines Tisches/Bereichs in Richtung (tx, ty), plus Abstand pad
+  function edgePoint(it, tx, ty, pad) {
+    const dx = tx - it.x, dy = ty - it.y, d = Math.hypot(dx, dy) || 1, ux = dx / d, uy = dy / d;
+    let r;
+    if (it.shape === 'round') r = it.w / 2;
+    else r = Math.min(ux ? (it.w / 2) / Math.abs(ux) : Infinity, uy ? (it.h / 2) / Math.abs(uy) : Infinity);
+    return { x: it.x + ux * (r + pad), y: it.y + uy * (r + pad) };
+  }
+  // Gestrichelter Weg: vom Eingang (Innenkante) oder einer Treppe zum Ziel
+  function routeSVG(from, to, fl, id) {
+    let sx = from.x, sy = from.y;
+    if (from.type === 'entrance') {
+      const near = [['t', from.y], ['b', fl.h - from.y], ['l', from.x], ['r', fl.w - from.x]].sort((a, b) => a[1] - b[1])[0][0];
+      if (near === 'b') sy = from.y - from.h / 2 - 1.5;
+      else if (near === 't') sy = from.y + from.h / 2 + 1.5;
+      else if (near === 'l') sx = from.x + from.w / 2 + 1.5;
+      else sx = from.x - from.w / 2 - 1.5;
+    } else {
+      ({ x: sx, y: sy } = edgePoint(from, to.x, to.y, 1.5));
+    }
+    const e = edgePoint(to, sx, sy, to.seats ? 6.5 : 2.5); // Tische haben Stühle rundherum
+    if (Math.hypot(e.x - sx, e.y - sy) < 3) return '';
+    return `<g class="route-g"><circle class="route-start" cx="${sx.toFixed(1)}" cy="${sy.toFixed(1)}" r="1.8"/><path class="route" d="M${sx.toFixed(1)} ${sy.toFixed(1)}L${e.x.toFixed(1)} ${e.y.toFixed(1)}" marker-end="url(#${id}a)"/></g>`;
+  }
+  // Weg zum Tisch, eventuell über mehrere Geschosse: Liste von Schritten {floor, from, to}
+  function wayFor(t) {
+    const f = floorOf(t);
+    const here = onFloor(state.objects, f);
+    const ent = here.find((o) => o.type === 'entrance');
+    if (ent) return [{ floor: f, from: ent, to: t }];
+    const conn = nearest(here.filter((o) => CONNECT.includes(o.type)), t);
+    const steps = [];
+    const entObj = state.objects.find((o) => o.type === 'entrance');
+    if (conn && entObj) {
+      const ef = floorOf(entObj);
+      const there = onFloor(state.objects, ef).filter((o) => CONNECT.includes(o.type));
+      const conn2 = nearest(there.filter((o) => o.type === conn.type), entObj) || nearest(there, entObj);
+      if (conn2) steps.push({ floor: ef, from: entObj, to: conn2 });
+    }
+    steps.push({ floor: f, from: conn, to: t });
+    return steps;
+  }
+  const objName = (o) => o.label || OBJ[o.type].name;
+
+  // ===================================================================
+  // 6. Gästeansicht
+  // ===================================================================
+  function guestTabs() {
+    const t = [{ id: 'seat', label: 'Mein Platz', icon: ICON.seat }];
+    if (state.options.showProgram && state.program.some((p) => p.title.trim())) t.push({ id: 'program', label: 'Programm', icon: ICON.clock });
+    if (state.options.showMenu && state.menu.some((c) => c.items.some((i) => i.name.trim()))) t.push({ id: 'menu', label: 'Karte', icon: ICON.glass });
+    if (state.tables.length) t.push({ id: 'plan', label: 'Saalplan', icon: ICON.map });
+    return t;
+  }
+  function renderGuest() {
+    const tabs = guestTabs();
+    if (!tabs.some((t) => t.id === ui.gTab)) ui.gTab = 'seat';
+    const { when, where } = eventLines();
+    const compact = ui.gTab !== 'seat';
+    root.innerHTML = `
+      ${ui.preview ? '<div class="preview-pill"><span>Vorschau: So sehen Gäste die Seite</span><button class="btn small hl" data-act="back-admin">Zurück zur Verwaltung</button></div>' : ''}
+      <div class="g-wrap${tabs.length > 1 ? ' has-tabs' : ''}">
+        <header class="g-head${compact ? ' compact' : ''}">
+          <h1 class="g-title">${esc(state.event.name || 'Willkommen')}</h1>
+          ${!compact && when ? `<p class="g-sub">${esc(when)}</p>` : ''}
+          ${!compact && where ? `<p class="g-sub">${esc(where)}</p>` : ''}
+          ${compact ? '' : ORNAMENT}
+        </header>
+        <div id="g-next">${nextBanner()}</div>
+        <section id="g-body">${guestBody()}</section>
+        ${ui.canAdmin && !ui.preview ? '<footer class="g-foot"><button class="linkish" data-act="enter-admin">Verwaltung öffnen</button></footer>' : ''}
+      </div>
+      ${tabs.length > 1 ? `<nav class="tabbar" aria-label="Bereiche">${tabs.map((t) => `<button data-act="gtab" data-tab="${t.id}"${t.id === ui.gTab ? ' aria-current="page"' : ''}>${t.icon}<span>${t.label}</span></button>`).join('')}</nav>` : ''}`;
+    ui.reveal = false;
+    centerOnHighlight();
+  }
+  function guestBody() {
+    if (ui.gTab === 'program') return programView();
+    if (ui.gTab === 'menu') return menuView();
+    if (ui.gTab === 'plan') return planView();
+    return seatView();
+  }
+  function nextBanner() {
+    if (ui.gTab !== 'seat' || !state.options.showProgram) return '';
+    const n = nextItem();
+    if (!n) return '';
+    return `<button class="next-banner" data-act="gtab" data-tab="program"><span class="nb-label">Als Nächstes</span><span class="nb-time">${esc(n.time)}</span><span class="nb-title">${esc(n.title)}</span></button>`;
+  }
+  function seatView() {
+    const me = state.guests.find((g) => g.id === ui.meId);
+    if (me) return placeCard(me);
+    if (!state.guests.some((g) => g.name.trim())) {
+      return '<p class="g-empty">Die Sitzordnung wird gerade vorbereitet. Schau etwas später noch einmal vorbei.</p>';
+    }
+    return `
+      <p class="g-intro">${esc(state.event.welcome.trim() || 'Gib deinen Namen ein, dann zeigen wir dir deinen Tisch.')}</p>
+      <label class="search" for="g-q"><span class="sr">Dein Name</span>${ICON.search}
+        <input id="g-q" type="search" autocomplete="off" autocapitalize="words" spellcheck="false" enterkeyhint="search" placeholder="Vor- oder Nachname" value="${esc(ui.query)}">
+      </label>
+      <div id="g-results" aria-live="polite">${resultsHTML()}</div>`;
+  }
+  function resultsHTML() {
+    const q = ui.query.trim();
+    if (q.replace(/\s/g, '').length < 2) return '';
+    const list = searchGuests(q);
+    if (!list.length) return `<p class="g-none">Kein Eintrag für „${esc(q)}“. Prüfe die Schreibweise oder frag beim Eingang nach.</p>`;
+    return `<ul class="results">${list.map((g) => {
+      const t = tableById(g.tableId);
+      const where = t ? `<span class="r-table">${esc(tableName(t))}${multiFloor() ? `<small>${esc(floorName(floorOf(t)))}</small>` : ''}</span>` : '<span class="r-table none">noch kein Tisch</span>';
+      return `<li><button class="result" data-act="pick" data-id="${esc(g.id)}"><span class="r-name">${esc(g.name)}${g.count > 1 ? `<small>${g.count} Personen</small>` : ''}</span>${where}</button></li>`;
+    }).join('')}</ul>`;
+  }
+  function placeCard(g) {
+    const t = tableById(g.tableId);
+    const mates = t && state.options.showTablemates
+      ? state.guests.filter((o) => o.tableId === t.id && o.id !== g.id && o.name.trim()).sort((a, b) => natCmp(a.name, b.name)) : [];
+    const isNumber = t && /^\d{1,3}[a-z]?$/i.test(t.label);
+    const label = t ? (isNumber ? t.label : t.label || 'Tisch') : '';
+    return `
+      <article class="placecard${ui.reveal ? ' reveal' : ''}" aria-label="Deine Tischkarte">
+        <div class="pc-in">
+          <p class="pc-hello">Willkommen,</p>
+          <h2 class="pc-name">${esc(g.name)}</h2>
+          ${g.count > 1 ? `<p class="pc-count">für ${g.count} Personen</p>` : ''}
+          ${PC_ORNAMENT}
+          ${t ? `<p class="pc-label">Dein Tisch</p><p class="pc-num${isNumber ? '' : ' word'}">${esc(label)}</p>${multiFloor() ? `<p class="pc-floor">${esc(floorName(floorOf(t)))}</p>` : ''}`
+            : '<p class="pc-missing">Für dich ist noch kein Tisch eingetragen. Bitte melde dich beim Eingang.</p>'}
+        </div>
+      </article>
+      ${t ? `<section class="g-section">
+        <div class="plan-head"><h3>So findest du hin</h3>${zoomControls()}</div>
+        ${wayHTML(t)}
+      </section>` : ''}
+      ${mates.length ? `<section class="g-section"><h3>An deinem Tisch</h3><ul class="mates">${mates.map((m) => `<li>${esc(m.name)}${m.count > 1 ? ` <small>(${m.count})</small>` : ''}</li>`).join('')}</ul></section>` : ''}
+      <div class="g-again"><button class="btn" data-act="search-again">Nicht du? Anderen Namen suchen</button></div>`;
+  }
+  // Wegbeschreibung: ein Plan, oder zwei Schritte über Treppe/Lift
+  function wayHTML(t) {
+    const steps = wayFor(t);
+    const plan = (st, label) => `<div class="plan-box g-plan">${planSVG({ floor: st.floor, hl: t.id, dim: true, hlObj: st.to.seats ? null : st.to.id, route: st.from ? { from: st.from, to: st.to } : null, zoom: ui.zoom, label })}</div>`;
+    if (steps.length === 2) {
+      const [a, b] = steps;
+      return `<p class="step-title">1. ${esc(floorName(a.floor))}</p>${plan(a, 'Weg vom Eingang zur ' + objName(a.to))}
+        <p class="plan-caption">Geh vom Eingang zur Markierung „${esc(objName(a.to))}“.</p>
+        <p class="step-title">2. ${esc(floorName(b.floor))}</p>${plan(b, 'Weg zu deinem Tisch')}
+        <p class="plan-caption">Von „${esc(objName(b.from))}“ führt die Linie zu deinem Tisch.</p>`;
+    }
+    const st = steps[0];
+    const caption = !st.from ? 'Dein Tisch ist im Plan farbig markiert.'
+      : st.from.type === 'entrance' ? 'Die gestrichelte Linie führt vom Eingang zu deinem Tisch.'
+      : `Die Linie führt von „${esc(objName(st.from))}“ zu deinem Tisch.`;
+    return `${multiFloor() ? `<p class="step-title">${esc(floorName(st.floor))}</p>` : ''}${plan(st, 'Saalplan mit deinem Tisch')}<p class="plan-caption">${caption}</p>`;
+  }
+  function zoomControls() {
+    return `<div class="zoom" role="group" aria-label="Plan vergrößern"><button class="icon-btn" data-act="zoom" data-z="-1" aria-label="Verkleinern"${ui.zoom <= 1 ? ' disabled' : ''}>−</button><button class="icon-btn" data-act="zoom" data-z="1" aria-label="Vergrößern"${ui.zoom >= 3 ? ' disabled' : ''}>+</button></div>`;
+  }
+  function programView() {
+    const items = sortedProgram().filter((p) => p.title.trim());
+    const now = nowBallMin(), next = nextItem(), cur = currentItem();
+    return `<h2 class="g-h2">Programm</h2><ol class="timeline">${items.map((p) => {
+      const past = now != null && p.time && ballMin(p.time) <= now && !(cur && cur.id === p.id);
+      const isNext = next && next.id === p.id, isCur = cur && cur.id === p.id;
+      return `<li class="${past ? 'past' : ''}${isNext ? ' next' : ''}"><span class="tl-time">${esc(p.time)}</span><div><p class="tl-title">${esc(p.title)}${isNext ? '<span class="tag">Als Nächstes</span>' : ''}${isCur ? '<span class="tag now">Läuft gerade</span>' : ''}</p>${p.desc.trim() ? `<p class="tl-desc">${esc(p.desc)}</p>` : ''}</div></li>`;
+    }).join('')}</ol>`;
+  }
+  function menuView() {
+    const cats = state.menu.map((c) => ({ title: c.title, items: c.items.filter((i) => i.name.trim()) })).filter((c) => c.items.length);
+    return `<h2 class="g-h2">Speisen & Getränke</h2>${cats.map((c) => `<section class="menu-cat"><h3>${esc(c.title || 'Karte')}</h3><ul class="menu-list">${c.items.map((i) => `<li><div class="mi-row"><span class="mi-name">${esc(i.name)}</span>${i.price.trim() ? `<span class="mi-dots" aria-hidden="true"></span><span class="mi-price">${esc(fmtPrice(i.price))}</span>` : ''}</div>${i.desc.trim() ? `<p class="mi-desc">${esc(i.desc)}</p>` : ''}</li>`).join('')}</ul></section>`).join('')}`;
+  }
+  function planView() {
+    const me = state.guests.find((g) => g.id === ui.meId);
+    const t = me ? tableById(me.tableId) : null;
+    if (!state.floors.some((f) => f.id === ui.gFloor)) ui.gFloor = t ? t.floorId : state.floors[0].id;
+    const f = floorById(ui.gFloor);
+    const step = t ? wayFor(t).find((st) => st.floor.id === f.id) : null;
+    const tabs = multiFloor() ? `<div class="seg g-floors" role="group" aria-label="Geschoss wählen">${state.floors.map((x) => `<button class="${x.id === f.id ? 'on' : ''}" data-act="gfloor" data-id="${esc(x.id)}" aria-pressed="${x.id === f.id}">${esc(floorName(x))}</button>`).join('')}</div>` : '';
+    let caption = 'Such unter „Mein Platz“ nach deinem Namen, dann wird dein Tisch hier markiert.';
+    if (t) caption = t.floorId === f.id ? `${esc(tableName(t))} ist farbig markiert.` : `${esc(tableName(t))} ist auf dem Plan „${esc(floorName(floorOf(t)))}“.`;
+    return `<div class="plan-head"><h2 class="g-h2">Saalplan</h2>${zoomControls()}</div>${tabs}
+      <div class="plan-box g-plan">${planSVG({ floor: f, hl: t ? t.id : null, dim: !!t, hlObj: step && !step.to.seats ? step.to.id : null, route: step && step.from ? { from: step.from, to: step.to } : null, zoom: ui.zoom })}</div>
+      <p class="plan-caption">${caption}</p>`;
+  }
+  // Nach dem Vergrößern den eigenen Tisch in die Mitte scrollen
+  function centerOnHighlight() {
+    if (ui.zoom <= 1) return;
+    document.querySelectorAll('.g-plan').forEach((box) => {
+      const hl = box.querySelector('.hl') || box.querySelector('.hlz');
+      if (!hl) return;
+      const b = hl.getBoundingClientRect(), r = box.getBoundingClientRect();
+      box.scrollLeft += b.left + b.width / 2 - (r.left + r.width / 2);
+      box.scrollTop += b.top + b.height / 2 - (r.top + r.height / 2);
+    });
+  }
+
+  // ===================================================================
+  // 7. Verwaltung
+  // ===================================================================
+  const A_TABS = [['overview', 'Übersicht'], ['guests', 'Gäste'], ['plan', 'Saalplan'], ['program', 'Programm'], ['menu', 'Speisen & Getränke'], ['share', 'QR-Code'], ['settings', 'Einstellungen']];
+
+  function renderAdmin() {
+    const counts = { guests: state.guests.length, plan: state.tables.length, program: state.program.length, menu: state.menu.reduce((n, c) => n + c.items.length, 0) };
+    const views = { overview: overviewTab, guests: guestsTab, plan: planTab, program: programTab, menu: menuTab, share: shareTab, settings: settingsTab };
+    root.innerHTML = `<div class="a-shell">
+      <aside class="a-side">
+        <div class="a-brand"><p class="a-brand-name" id="a-brand-name">${esc(state.event.name || 'Unser Ball')}</p><p class="a-brand-sub">Verwaltung</p></div>
+        <nav class="a-nav" aria-label="Verwaltung">${A_TABS.map(([id, label]) => `<button data-act="atab" data-tab="${id}"${ui.aTab === id ? ' aria-current="page"' : ''}><span>${label}</span>${counts[id] != null ? `<span class="cnt">${counts[id]}</span>` : ''}</button>`).join('')}</nav>
+        <div class="a-side-foot"><button class="btn small" data-act="preview">Als Gast ansehen</button></div>
+      </aside>
+      <main class="a-main" id="a-main">${adminBanners()}${(views[ui.aTab] || overviewTab)()}</main>
+    </div>`;
+    if (focusAfter) {
+      const el = document.querySelector(focusAfter);
+      focusAfter = null;
+      if (el) el.focus();
+    }
+  }
+  function adminBanners() {
+    let h = '';
+    if (ui.draft) {
+      const at = new Date(ui.draft.at).toLocaleString('de-AT', { dateStyle: 'short', timeStyle: 'short' });
+      const newer = ui.draft.base !== state.updatedAt ? ' Seitdem wurde allerdings eine neuere Version gespeichert.' : '';
+      h += `<div class="banner"><div><strong>Es gibt ungespeicherte Änderungen vom ${esc(at)}.</strong>${newer}</div><div class="btn-row"><button class="btn small primary" data-act="draft-restore">Wiederherstellen</button><button class="btn small" data-act="draft-discard">Verwerfen</button></div></div>`;
+    }
+    if (ui.readOnly) h += '<div class="banner warn"><div>Du kannst diese Seite ansehen, aber nicht speichern. Speichern kann nur, wer die Seite bearbeiten darf.</div></div>';
+    else if (!caps.artifact) h += '<div class="banner warn"><div>Speichern funktioniert nur, wenn die Seite direkt in claude.ai geöffnet ist.</div></div>';
+    return h;
+  }
+
+  // ----- Übersicht -----
+  function overviewTab() {
+    const persons = sumPersons(), seats = state.tables.reduce((n, t) => n + t.seats, 0);
+    const unassigned = state.guests.filter((g) => !g.tableId);
+    const occ = occupancy();
+    const over = state.tables.filter((t) => (occ[t.id] || 0) > t.seats).sort((a, b) => natCmp(a.label, b.label));
+    const issues = [];
+    if (state.isDemo) {
+      issues.push('<li><span>Gäste, Programm und Karte sind noch Beispieldaten.</span><button class="btn small" data-act="demo-clear">Beispieldaten entfernen</button></li>');
+    }
+    if (unassigned.length) issues.push(`<li><span>${unassigned.length === 1 ? '1 Eintrag hat' : unassigned.length + ' Einträge haben'} noch keinen Tisch.</span><button class="btn small" data-act="goto" data-tab="guests" data-unassigned="1">Anzeigen</button></li>`);
+    for (const t of over) issues.push(`<li><span>${esc(tableName(t))} ist überbelegt: ${occ[t.id]} Personen bei ${t.seats} Plätzen.</span><button class="btn small" data-act="goto" data-tab="plan" data-sel="${esc(t.id)}">Im Plan zeigen</button></li>`);
+    if (persons > seats && state.tables.length) issues.push(`<li><span>Es gibt mehr Personen (${persons}) als Sitzplätze (${seats}).</span><button class="btn small" data-act="goto" data-tab="plan">Zum Saalplan</button></li>`);
+    if (state.tables.length && !state.objects.some((o) => o.type === 'entrance')) issues.push('<li><span>Im Saalplan fehlt ein Eingang. Ohne Eingang sehen Gäste keinen Weg zu ihrem Tisch.</span><button class="btn small" data-act="goto" data-tab="plan">Zum Saalplan</button></li>');
+    const entObj = state.objects.find((o) => o.type === 'entrance');
+    if (entObj && multiFloor()) {
+      const ef = floorOf(entObj);
+      const hasConn = (f) => onFloor(state.objects, f).some((o) => CONNECT.includes(o.type));
+      for (const f of state.floors) {
+        if (f.id === ef.id || !onFloor(state.tables, f).length || onFloor(state.objects, f).some((o) => o.type === 'entrance')) continue;
+        if (!hasConn(f)) issues.push(`<li><span>Im Plan „${esc(floorName(f))}“ fehlt eine Treppe oder ein Lift. Gäste sehen dort keinen Weg zu ihrem Tisch.</span><button class="btn small" data-act="goto" data-tab="plan" data-floor="${esc(f.id)}">Zum Plan</button></li>`);
+        else if (!hasConn(ef)) issues.push(`<li><span>Im Plan „${esc(floorName(ef))}“ fehlt eine Treppe oder ein Lift. Gäste für „${esc(floorName(f))}“ sehen sonst nicht, wie sie vom Eingang hinkommen.</span><button class="btn small" data-act="goto" data-tab="plan" data-floor="${esc(ef.id)}">Zum Plan</button></li>`);
+      }
+    }
+    if (!state.event.guestUrl.trim()) issues.push('<li><span>Für den QR-Code fehlt noch der Link zur Gäste-Seite.</span><button class="btn small" data-act="goto" data-tab="share">Link eintragen</button></li>');
+    return `
+      <h1 class="a-h">Übersicht</h1>
+      <p class="a-lead">Hier siehst du auf einen Blick, ob alles für die Gäste bereit ist.</p>
+      <dl class="stats">
+        <div><dt>Einträge</dt><dd>${state.guests.length}</dd></div>
+        <div><dt>Personen</dt><dd>${persons}</dd></div>
+        <div><dt>Sitzplätze</dt><dd>${seats}<small> an ${state.tables.length} ${state.tables.length === 1 ? 'Tisch' : 'Tischen'}</small></dd></div>
+        <div><dt>Ohne Tisch</dt><dd class="${unassigned.length ? 'warn' : ''}">${unassigned.length}</dd></div>
+      </dl>
+      <section class="a-sec"><h2>Zu erledigen</h2>${issues.length ? `<ul class="issues">${issues.join('')}</ul>` : '<p class="ok-line">Alles bereit. Gäste können ihren Platz finden.</p>'}</section>
+      <section class="a-sec"><h2>Saalplan mit Belegung</h2>${state.floors.map((f) => `${multiFloor() ? `<h3 class="floor-h">${esc(floorName(f))}</h3>` : ''}<div class="plan-box small">${planSVG({ floor: f, occ: true, label: 'Saalplan ' + floorName(f) })}</div>`).join('')}</section>`;
+  }
+
+  // ----- Gäste -----
+  function guestsTab() {
+    const tables = state.tables.slice().sort((a, b) => natCmp(a.label, b.label));
+    const unassigned = state.guests.filter((g) => !g.tableId).length;
+    return `
+      <h1 class="a-h">Gäste</h1>
+      <p class="a-lead">${state.guests.length} ${state.guests.length === 1 ? 'Eintrag' : 'Einträge'}, ${sumPersons()} Personen${unassigned ? `, ${unassigned} ohne Tisch` : ''}. Paare oder Familien kannst du als einen Eintrag mit mehreren Personen anlegen.</p>
+      <div class="addrow">
+        <label class="field grow"><span>Name</span><input id="add-name" type="text" placeholder="z. B. Anna Gruber" autocomplete="off"></label>
+        <label class="field w-sm"><span>Personen</span><input id="add-count" type="number" min="1" max="50" value="1"></label>
+        <label class="field w-md"><span>Tisch</span><input id="add-table" type="text" list="table-list" placeholder="z. B. 7" autocomplete="off" value="${esc(ui.addTable)}"></label>
+        <datalist id="table-list">${tables.map((t) => `<option value="${esc(t.label)}"></option>`).join('')}</datalist>
+        <button class="btn primary" data-act="add-guest">Hinzufügen</button>
+      </div>
+      <p class="hint">Mit der Eingabetaste geht’s am schnellsten. Gibt es den Tisch noch nicht, wird er im Saalplan angelegt.</p>
+      <div class="toolbar">
+        <input type="search" id="g-filter" placeholder="In der Liste suchen" value="${esc(ui.gFilter)}" aria-label="In der Gästeliste suchen">
+        <label class="check"><input type="checkbox" id="g-unassigned"${ui.gUnassigned ? ' checked' : ''}> Nur ohne Tisch</label>
+        <select id="g-sort" aria-label="Sortierung"><option value="name"${ui.gSort === 'name' ? ' selected' : ''}>Nach Name</option><option value="table"${ui.gSort === 'table' ? ' selected' : ''}>Nach Tisch</option></select>
+        <span class="spacer"></span>
+        <button class="btn small" data-act="toggle-import" aria-expanded="${ui.importOpen}">Liste aus Excel einfügen</button>
+        <button class="btn small" data-act="export-csv"${state.guests.length ? '' : ' disabled'}>Als CSV herunterladen</button>
+      </div>
+      ${ui.importOpen ? importPanel() : ''}
+      <div class="gl" id="g-table">${guestListHTML()}</div>`;
+  }
+  function guestListHTML() {
+    const tables = state.tables.slice().sort((a, b) => natCmp(a.label, b.label));
+    const q = tokens(ui.gFilter);
+    let list = state.guests.filter((g) => {
+      if (ui.gUnassigned && g.tableId) return false;
+      if (!q.length) return true;
+      const hay = tokens(g.name + ' ' + (tableById(g.tableId) || { label: '' }).label);
+      return q.every((x) => hay.some((h) => h.startsWith(x)));
+    });
+    if (ui.gSort === 'table') {
+      list = list.slice().sort((a, b) => {
+        const ta = tableById(a.tableId), tb = tableById(b.tableId);
+        if (!ta !== !tb) return ta ? -1 : 1;
+        return (ta && tb ? natCmp(ta.label, tb.label) : 0) || natCmp(a.name, b.name);
+      });
+    } else {
+      list = list.slice().sort((a, b) => natCmp(a.name, b.name));
+    }
+    if (!state.guests.length) return '<p class="gl-empty">Noch keine Gäste. Trag oben den ersten Namen ein oder füge eine ganze Liste aus Excel ein.</p>';
+    if (!list.length) return '<p class="gl-empty">Kein Eintrag passt zu deiner Suche.</p>';
+    const LIMIT = 150, total = list.length;
+    if (!ui.gShowAll && total > LIMIT) list = list.slice(0, LIMIT);
+    const opt = (t) => `<option value="${esc(t.id)}">${esc(tableName(t))}</option>`;
+    const baseOptions = '<option value="">– kein Tisch –</option>' + (multiFloor()
+      ? state.floors.map((f) => { const ts = tables.filter((t) => t.floorId === f.id); return ts.length ? `<optgroup label="${esc(floorName(f))}">${ts.map(opt).join('')}</optgroup>` : ''; }).join('')
+      : tables.map(opt).join(''));
+    const options = (sel) => (sel ? baseOptions.replace(`value="${esc(sel)}"`, `value="${esc(sel)}" selected`) : baseOptions);
+    return `<div class="gl-head"><span>Name</span><span>Personen</span><span>Tisch</span><span></span></div>${list.map((g) => `
+      <div class="gl-row${g.tableId ? '' : ' unassigned'}" data-id="${esc(g.id)}">
+        <input class="cell" type="text" data-g="name" value="${esc(g.name)}" aria-label="Name">
+        <input class="cell" type="number" min="1" max="50" data-g="count" value="${g.count}" aria-label="Personen">
+        <select class="cell" data-g="table" aria-label="Tisch">${options(g.tableId)}</select>
+        <button class="icon-btn plain" data-act="del-guest" data-id="${esc(g.id)}" aria-label="${esc(g.name)} löschen">${ICON.x}</button>
+      </div>`).join('')}${list.length < total ? `<p class="gl-empty">${list.length} von ${total} angezeigt. Nutze die Suche oder <button class="linkish" data-act="show-all">zeige alle an</button>.</p>` : ''}`;
+  }
+  function importPanel() {
+    return `<div class="import">
+      <p>Kopiere die Spalten <b>Name</b> und <b>Tisch</b> (optional <b>Personen</b>) aus Excel und füge sie hier ein. Eine Zeile pro Eintrag. Eine Kopfzeile wie „Vorname, Nachname, Tisch“ wird erkannt.</p>
+      <textarea id="import-text" rows="7" placeholder="Anna Gruber;1;2&#10;Lukas Hofer;1&#10;Familie Steiner;2;4">${esc(ui.importText)}</textarea>
+      <div class="btn-row"><label class="btn small file-btn">CSV-Datei wählen<input type="file" id="import-file" accept=".csv,.txt,text/csv,text/plain"></label></div>
+      <div id="import-preview">${importPreviewHTML()}</div>
+    </div>`;
+  }
+  function parseImport(text) {
+    const lines = String(text || '').replace(/^\ufeff/, '').split(/\r?\n/).filter((l) => l.trim());
+    if (!lines.length) return { rows: [], skipped: 0 };
+    const delim = lines.some((l) => l.includes('\t')) ? '\t' : lines.some((l) => l.includes(';')) ? ';' : ',';
+    let cells = lines.map((l) => l.split(delim).map((c) => c.trim().replace(/^"(.*)"$/, '$1').replace(/""/g, '"').trim()));
+    let col = { name: 0, first: -1, last: -1, table: 1, count: 2 };
+    // Kopfzeile nur, wenn eine Zelle genau ein Spaltenname ist (sonst wäre „Gastl“ eine Kopfzeile)
+    const HEAD = {
+      name: ['name', 'namen', 'gast', 'gaste', 'gastname', 'vollername'], first: ['vorname'], last: ['nachname', 'familienname', 'zuname'],
+      table: ['tisch', 'tischnr', 'tischnummer', 'table', 'platz'], count: ['personen', 'anzahl', 'pers', 'anzahlpersonen', 'personenanzahl'],
+    };
+    const head = cells[0].map((c) => canon(c).replace(/[^a-z]/g, ''));
+    const find = (key) => head.findIndex((h) => HEAD[key].includes(h));
+    if (Object.keys(HEAD).some((k) => find(k) >= 0)) {
+      col = { name: find('name'), first: find('first'), last: find('last'), table: find('table'), count: find('count') };
+      cells = cells.slice(1);
+    }
+    const rows = [];
+    let skipped = 0;
+    for (const c of cells) {
+      let name = col.name >= 0 ? c[col.name] || '' : '';
+      if (!name && (col.first >= 0 || col.last >= 0)) name = [col.first >= 0 ? c[col.first] : '', col.last >= 0 ? c[col.last] : ''].join(' ');
+      name = name.replace(/\s+/g, ' ').trim();
+      if (!name) { skipped++; continue; }
+      const table = col.table >= 0 ? String(c[col.table] || '').replace(/^tisch\s*/i, '').trim() : '';
+      const count = col.count >= 0 ? parseInt(c[col.count], 10) : NaN;
+      rows.push({ name: name.slice(0, 120), table: table.slice(0, 30), count: Number.isFinite(count) && count > 0 ? Math.min(count, 50) : 1 });
+    }
+    return { rows, skipped };
+  }
+  function importPreviewHTML() {
+    const { rows, skipped } = parseImport(ui.importText);
+    if (!rows.length) return ui.importText.trim() ? '<p class="muted">In diesem Text wurde kein Name erkannt.</p>' : '';
+    const known = new Set(state.tables.map((t) => canon(t.label)));
+    const fresh = [];
+    for (const r of rows) if (r.table && !known.has(canon(r.table))) { known.add(canon(r.table)); fresh.push(r.table); }
+    return `<p class="import-sum">${rows.length} ${rows.length === 1 ? 'Eintrag' : 'Einträge'} erkannt${fresh.length ? `, ${fresh.length === 1 ? '1 neuer Tisch wird' : fresh.length + ' neue Tische werden'} angelegt (${fresh.slice(0, 8).map(esc).join(', ')}${fresh.length > 8 ? ' …' : ''})` : ''}.${skipped ? ` ${skipped === 1 ? '1 Zeile ohne Namen wird' : skipped + ' Zeilen ohne Namen werden'} übersprungen.` : ''}</p>
+      <table class="import-prev"><thead><tr><th>Name</th><th>Tisch</th><th>Personen</th></tr></thead><tbody>${rows.slice(0, 5).map((r) => `<tr><td>${esc(r.name)}</td><td>${esc(r.table || '–')}</td><td>${r.count}</td></tr>`).join('')}</tbody></table>
+      ${rows.length > 5 ? `<p class="muted">… und ${rows.length - 5} weitere.</p>` : ''}
+      <div class="btn-row"><button class="btn primary" data-act="import-apply" data-mode="add">Zur Liste hinzufügen</button>${state.guests.length ? '<button class="btn" data-act="import-apply" data-mode="replace">Bisherige Liste ersetzen</button>' : ''}</div>`;
+  }
+
+  // ----- Saalplan-Editor -----
+  function planTab() {
+    return `
+      <h1 class="a-h">Saalplan</h1>
+      <p class="a-lead">Ziehe Tische und Bereiche an ihren Platz. Klick etwas an, um es zu bearbeiten. Die Zahlen unter den Tischnummern zeigen die Belegung. Für weitere Stockwerke legst du ein Geschoss an und verbindest es mit einer Treppe oder einem Lift.</p>
+      <div class="floor-bar" id="floor-bar">${floorBarHTML()}</div>
+      <div class="plan-tools">
+        <div class="tool-group"><button class="btn small primary" data-act="plan-add-table" data-shape="round">Runder Tisch</button><button class="btn small primary" data-act="plan-add-table" data-shape="rect">Eckiger Tisch</button></div>
+        <div class="tool-group"><select id="obj-type" aria-label="Art des Bereichs">${Object.entries(OBJ).map(([k, v]) => `<option value="${k}">${v.name}</option>`).join('')}</select><button class="btn small" data-act="plan-add-obj">Bereich hinzufügen</button></div>
+        <div class="tool-group"><label class="check"><input type="checkbox" id="snap"${ui.snap ? ' checked' : ''}> Am Raster ausrichten</label><button class="btn small" data-act="plan-auto"${state.tables.length ? '' : ' disabled'}>Tische automatisch anordnen</button></div>
+      </div>
+      <div class="plan-tools floor-tools">
+        <label class="field floor-name"><span>Name dieses Geschosses</span><input type="text" data-floor="name" value="${esc(curFloor().name)}" placeholder="z. B. Obergeschoss"></label>
+        <div class="tool-group room-size"><span>Größe</span><input type="text" inputmode="decimal" data-room="w" value="${toM(curFloor().w)}" aria-label="Breite in Metern"><span>×</span><input type="text" inputmode="decimal" data-room="h" value="${toM(curFloor().h)}" aria-label="Tiefe in Metern"><span>Meter</span></div>
+        ${multiFloor() ? '<button class="btn small danger" data-act="floor-del">Geschoss löschen</button>' : ''}
+      </div>
+      <p class="hint small-only">Tipp: Am Laptop lässt sich der Saalplan am leichtesten bearbeiten.</p>
+      <div class="plan-layout">
+        <div class="plan-box editor" id="plan-box">${editorSVG()}</div>
+        <aside class="plan-props" id="plan-props">${propsHTML()}</aside>
+      </div>`;
+  }
+  const editorSVG = () => planSVG({ floor: curFloor(), edit: true, sel: ui.sel, grid: true, occ: true, label: 'Saalplan bearbeiten' });
+  function floorBarHTML() {
+    const cur = curFloor();
+    return state.floors.map((f) => `<button class="floor-tab${f.id === cur.id ? ' on' : ''}" data-act="floor" data-id="${esc(f.id)}" aria-pressed="${f.id === cur.id}">${esc(floorName(f))} <span class="cnt">${onFloor(state.tables, f).length}</span></button>`).join('')
+      + '<button class="btn small" data-act="floor-add">Geschoss hinzufügen</button>';
+  }
+  function floorSelectHTML(it) {
+    if (!multiFloor()) return '';
+    return `<label class="field"><span>Geschoss</span><select data-move="floor">${state.floors.map((f) => `<option value="${esc(f.id)}"${f.id === it.floorId ? ' selected' : ''}>${esc(floorName(f))}</option>`).join('')}</select></label>`;
+  }
+  function refreshPlan(withProps = true) {
+    const box = document.getElementById('plan-box');
+    if (box) box.innerHTML = editorSVG();
+    if (withProps) {
+      const p = document.getElementById('plan-props');
+      if (p) p.innerHTML = propsHTML();
+    }
+  }
+  function propsHTML() {
+    const found = findItem(ui.sel);
+    if (!found) {
+      const occ = occupancy(), f = curFloor();
+      const tables = onFloor(state.tables, f).sort((a, b) => natCmp(a.label, b.label));
+      const objects = onFloor(state.objects, f);
+      return `<h2>Auswahl</h2>
+        <p class="muted">Klick im Plan auf einen Tisch oder Bereich. Pfeiltasten verschieben die Auswahl, Entf löscht sie.</p>
+        ${tables.length ? `<h3>Tische</h3><div class="item-list">${tables.map((t) => `<button data-act="select" data-id="${esc(t.id)}" class="${(occ[t.id] || 0) > t.seats ? 'over' : ''}">${esc(t.label || '?')} <small>${occ[t.id] || 0}/${t.seats}</small></button>`).join('')}</div>` : ''}
+        ${objects.length ? `<h3>Bereiche</h3><div class="item-list">${objects.map((o) => `<button data-act="select" data-id="${esc(o.id)}">${esc(objName(o))}</button>`).join('')}</div>` : ''}
+        ${!tables.length && !objects.length ? '<p class="muted">Dieser Plan ist noch leer. Füg oben Tische und Bereiche hinzu.</p>' : ''}`;
+    }
+    if (found.kind === 'table') {
+      const t = found.item;
+      const used = occupancy()[t.id] || 0;
+      const gs = state.guests.filter((g) => g.tableId === t.id).sort((a, b) => natCmp(a.name, b.name));
+      return `<h2 id="props-title">${esc(tableName(t))}</h2>
+        <label class="field"><span>Nummer oder Name</span><input type="text" data-t="label" value="${esc(t.label)}"></label>
+        <div class="field"><span>Form</span><div class="seg" role="group" aria-label="Form"><button class="${t.shape === 'round' ? 'on' : ''}" data-act="plan-shape" data-shape="round" aria-pressed="${t.shape === 'round'}">Rund</button><button class="${t.shape === 'rect' ? 'on' : ''}" data-act="plan-shape" data-shape="rect" aria-pressed="${t.shape === 'rect'}">Eckig</button></div></div>
+        <label class="field"><span>Sitzplätze</span><input type="number" min="1" max="60" data-t="seats" value="${t.seats}"></label>
+        ${floorSelectHTML(t)}
+        ${t.shape === 'round'
+          ? `<label class="field"><span>Durchmesser in Metern</span><input type="text" inputmode="decimal" data-t="d" value="${toM(t.w)}"></label>`
+          : `<div class="two"><label class="field"><span>Breite (m)</span><input type="text" inputmode="decimal" data-t="w" value="${toM(t.w)}"></label><label class="field"><span>Tiefe (m)</span><input type="text" inputmode="decimal" data-t="h" value="${toM(t.h)}"></label></div>`}
+        <div class="btn-row">${t.shape === 'rect' ? '<button class="btn small" data-act="plan-rot">Drehen</button>' : ''}<button class="btn small" data-act="plan-dup">Duplizieren</button><button class="btn small danger" data-act="plan-del">Löschen</button></div>
+        <h3>Gäste an diesem Tisch <span class="occ-chip${used > t.seats ? ' over' : ''}">${used} von ${t.seats}</span></h3>
+        ${gs.length ? `<ul class="mini-list">${gs.map((g) => `<li>${esc(g.name)}${g.count > 1 ? ` <small>(${g.count})</small>` : ''}</li>`).join('')}</ul>` : '<p class="muted">Noch niemand zugeteilt. Das machst du im Bereich Gäste.</p>'}
+        <button class="btn small" data-act="select" data-id="">Auswahl aufheben</button>`;
+    }
+    const o = found.item;
+    return `<h2 id="props-title">${esc(o.label || OBJ[o.type].name)}</h2>
+      <label class="field"><span>Art</span><select data-o="type">${Object.entries(OBJ).map(([k, v]) => `<option value="${k}"${k === o.type ? ' selected' : ''}>${v.name}</option>`).join('')}</select></label>
+      <label class="field"><span>Beschriftung</span><input type="text" data-o="label" value="${esc(o.label)}" placeholder="${esc(OBJ[o.type].name)}"></label>
+      <div class="two"><label class="field"><span>Breite (m)</span><input type="text" inputmode="decimal" data-o="w" value="${toM(o.w)}"></label><label class="field"><span>Tiefe (m)</span><input type="text" inputmode="decimal" data-o="h" value="${toM(o.h)}"></label></div>
+      ${floorSelectHTML(o)}
+      ${o.type === 'entrance' ? '<p class="muted">Vom Eingang aus zeigt der Plan den Gästen den Weg zu ihrem Tisch.</p>' : ''}
+      ${CONNECT.includes(o.type) ? '<p class="muted">Setz in jedem Geschoss eine Treppe oder einen Lift. Darüber führt der Weg für Gäste, die nicht im Eingangsgeschoss sitzen.</p>' : ''}
+      <div class="btn-row"><button class="btn small" data-act="plan-rot">Drehen</button><button class="btn small" data-act="plan-dup">Duplizieren</button><button class="btn small danger" data-act="plan-del">Löschen</button></div>
+      <button class="btn small" data-act="select" data-id="">Auswahl aufheben</button>`;
+  }
+  function keepInRoom(it) {
+    const f = floorOf(it);
+    it.x = clamp(it.x, it.w / 2, f.w - it.w / 2);
+    it.y = clamp(it.y, it.h / 2, f.h - it.h / 2);
+  }
+  function deleteSelected() {
+    const found = findItem(ui.sel);
+    if (!found) return;
+    const it = found.item;
+    let msg;
+    if (found.kind === 'table') {
+      const affected = state.guests.filter((g) => g.tableId === it.id).length;
+      commit((s) => { s.tables = s.tables.filter((t) => t.id !== it.id); s.guests.forEach((g) => { if (g.tableId === it.id) g.tableId = ''; }); });
+      msg = `${tableName(it)} gelöscht.${affected ? ` ${affected === 1 ? '1 Eintrag hat' : affected + ' Einträge haben'} jetzt keinen Tisch.` : ''}`;
+    } else {
+      commit((s) => { s.objects = s.objects.filter((o) => o.id !== it.id); });
+      msg = `${it.label || OBJ[it.type].name} gelöscht.`;
+    }
+    ui.sel = null;
+    render();
+    toast(msg, { action: { label: 'Rückgängig', run: undo } });
+  }
+
+  // Ziehen mit Maus, Finger oder Stift
+  let drag = null;
+  function svgPoint(svg, e) {
+    const pt = svg.createSVGPoint();
+    pt.x = e.clientX; pt.y = e.clientY;
+    return pt.matrixTransform(svg.getScreenCTM().inverse());
+  }
+  function onPointerDown(e) {
+    const box = e.target.closest && e.target.closest('#plan-box');
+    if (!box || ui.mode !== 'admin' || e.button > 0) return;
+    const svg = box.querySelector('svg');
+    const g = e.target.closest('[data-item]');
+    if (!g) { if (ui.sel) { ui.sel = null; refreshPlan(); } return; }
+    const found = findItem(g.dataset.item);
+    if (!found) return;
+    e.preventDefault();
+    const p = svgPoint(svg, e);
+    drag = { id: found.item.id, ox: p.x - found.item.x, oy: p.y - found.item.y, snapshot: JSON.stringify(state), moved: false, pid: e.pointerId };
+    try { box.setPointerCapture(e.pointerId); } catch (err) { /* egal */ }
+    if (ui.sel !== found.item.id) { ui.sel = found.item.id; refreshPlan(); }
+  }
+  function onPointerMove(e) {
+    if (!drag || e.pointerId !== drag.pid) return;
+    const box = document.getElementById('plan-box');
+    const svg = box && box.querySelector('svg');
+    const found = findItem(drag.id);
+    if (!svg || !found) return;
+    const it = found.item, p = svgPoint(svg, e), step = ui.snap ? 5 : 1, f = floorOf(it);
+    const x = clamp(Math.round((p.x - drag.ox) / step) * step, it.w / 2, f.w - it.w / 2);
+    const y = clamp(Math.round((p.y - drag.oy) / step) * step, it.h / 2, f.h - it.h / 2);
+    if (x !== it.x || y !== it.y) { it.x = x; it.y = y; drag.moved = true; box.innerHTML = editorSVG(); }
+  }
+  function onPointerUp(e) {
+    if (!drag || e.pointerId !== drag.pid) return;
+    if (drag.moved) {
+      undoStack.push(drag.snapshot);
+      if (undoStack.length > 80) undoStack.shift();
+      undoKey = null;
+      afterChange(false);
+    }
+    drag = null;
+  }
+
+  // ----- Programm -----
+  const PROG_CHIPS = [['19:00', 'Einlass'], ['20:00', 'Eröffnung'], ['21:00', 'Polonaise'], ['22:00', 'Alles Walzer'], ['23:30', 'Tombola'], ['00:00', 'Mitternachtseinlage'], ['03:00', 'Letzter Tanz']];
+  function programTab() {
+    const items = sortedProgram();
+    const chips = PROG_CHIPS.filter(([, t]) => !state.program.some((p) => canon(p.title) === canon(t)));
+    return `
+      <h1 class="a-h">Programm</h1>
+      <p class="a-lead">Programmpunkte nach Mitternacht werden automatisch ans Ende sortiert. Während des Balls sehen Gäste, was als Nächstes kommt.</p>
+      <div class="prog-list">${items.map((p) => `<div class="prog-row" data-id="${esc(p.id)}">
+        <input type="time" data-p="time" value="${esc(p.time)}" aria-label="Uhrzeit">
+        <input type="text" data-p="title" value="${esc(p.title)}" placeholder="Titel, z. B. Polonaise" aria-label="Titel">
+        <input type="text" data-p="desc" value="${esc(p.desc)}" placeholder="Beschreibung (optional)" aria-label="Beschreibung">
+        <button class="icon-btn plain" data-act="prog-del" data-id="${esc(p.id)}" aria-label="Programmpunkt löschen">${ICON.x}</button>
+      </div>`).join('') || '<p class="gl-empty">Noch keine Programmpunkte.</p>'}</div>
+      <div class="btn-row"><button class="btn primary" data-act="prog-add">Programmpunkt hinzufügen</button></div>
+      ${chips.length ? `<div class="chips"><span class="muted">Schnell hinzufügen:</span>${chips.map(([time, title]) => `<button class="chip" data-act="prog-chip" data-time="${time}" data-title="${esc(title)}">${time} ${esc(title)}</button>`).join('')}</div>` : ''}`;
+  }
+
+  // ----- Speisen & Getränke -----
+  const MENU_CHIPS = ['Speisen', 'Alkoholfreie Getränke', 'Bier & Wein', 'Spritzer', 'Longdrinks', 'Kaffee & Süßes'];
+  function menuTab() {
+    const chips = MENU_CHIPS.filter((t) => !state.menu.some((c) => canon(c.title) === canon(t)));
+    return `
+      <h1 class="a-h">Speisen & Getränke</h1>
+      <p class="a-lead">Preise einfach als Zahl eingeben, z. B. 4,50 – das Euro-Zeichen kommt automatisch dazu. Leere Einträge sehen Gäste nicht.</p>
+      ${state.menu.map((c) => `<section class="menu-edit">
+        <div class="me-head"><input type="text" data-mc="title" data-id="${esc(c.id)}" value="${esc(c.title)}" placeholder="Name der Kategorie" aria-label="Name der Kategorie"><button class="btn small danger" data-act="menu-del-cat" data-id="${esc(c.id)}">Kategorie löschen</button></div>
+        <div class="me-items">${c.items.map((i, idx) => `<div class="me-row">
+          <input type="text" data-mi="name" data-cat="${esc(c.id)}" data-id="${esc(i.id)}" value="${esc(i.name)}" placeholder="Bezeichnung" aria-label="Bezeichnung">
+          <input type="text" data-mi="desc" data-cat="${esc(c.id)}" data-id="${esc(i.id)}" value="${esc(i.desc)}" placeholder="Beschreibung (optional)" aria-label="Beschreibung">
+          <input type="text" inputmode="decimal" data-mi="price" data-cat="${esc(c.id)}" data-id="${esc(i.id)}" value="${esc(i.price)}" placeholder="Preis" aria-label="Preis">
+          <div class="me-btns"><button class="icon-btn plain" data-act="menu-move" data-dir="-1" data-cat="${esc(c.id)}" data-id="${esc(i.id)}" aria-label="Nach oben"${idx === 0 ? ' disabled' : ''}>${ICON.up}</button><button class="icon-btn plain" data-act="menu-move" data-dir="1" data-cat="${esc(c.id)}" data-id="${esc(i.id)}" aria-label="Nach unten"${idx === c.items.length - 1 ? ' disabled' : ''}>${ICON.down}</button><button class="icon-btn plain" data-act="menu-del-item" data-cat="${esc(c.id)}" data-id="${esc(i.id)}" aria-label="Eintrag löschen">${ICON.x}</button></div>
+        </div>`).join('')}</div>
+        <button class="btn small" data-act="menu-add-item" data-cat="${esc(c.id)}">Eintrag hinzufügen</button>
+      </section>`).join('') || '<p class="gl-empty">Noch keine Karte angelegt.</p>'}
+      <div class="btn-row"><button class="btn primary" data-act="menu-add-cat">Kategorie hinzufügen</button></div>
+      ${chips.length ? `<div class="chips"><span class="muted">Schnell hinzufügen:</span>${chips.map((t) => `<button class="chip" data-act="menu-chip" data-title="${esc(t)}">${esc(t)}</button>`).join('')}</div>` : ''}`;
+  }
+
+  // ----- QR-Code -----
+  const validUrl = (u) => /^https?:\/\/[^\s/]+\.[^\s]+$/i.test(u);
+  function shareTab() {
+    return `
+      <h1 class="a-h">QR-Code für die Gäste</h1>
+      <p class="a-lead">Der QR-Code führt direkt zur Namenssuche. Gäste brauchen dafür kein Konto.</p>
+      <ol class="steps">
+        <li><b>Speichern.</b> Gäste sehen immer die zuletzt gespeicherte Version.</li>
+        <li><b>Link teilen.</b> Teile diese Seite in claude.ai so, dass jede Person mit dem Link sie öffnen kann, und kopiere den Link.</li>
+        <li><b>Link hier einfügen.</b> Daraus entsteht der QR-Code.</li>
+        <li><b>Aushang drucken</b> und beim Eingang aufhängen.</li>
+      </ol>
+      <label class="field"><span>Link zur Gäste-Seite</span><input type="url" id="guest-url" data-bind="event.guestUrl" placeholder="https://claude.ai/…" value="${esc(state.event.guestUrl)}"></label>
+      <div id="qr-area">${qrAreaHTML()}</div>`;
+  }
+  function qrMatrix(text) {
+    if (typeof qrcode !== 'function') return null;
+    try {
+      if (qrcode.stringToBytesFuncs && qrcode.stringToBytesFuncs['UTF-8']) qrcode.stringToBytes = qrcode.stringToBytesFuncs['UTF-8'];
+      const q = qrcode(0, 'Q');
+      q.addData(text);
+      q.make();
+      return { n: q.getModuleCount(), dark: (r, c) => q.isDark(r, c) };
+    } catch (e) { return null; }
+  }
+  function qrSvg(m) {
+    const quiet = 4, size = m.n + quiet * 2;
+    let d = '';
+    for (let r = 0; r < m.n; r++) for (let c = 0; c < m.n; c++) if (m.dark(r, c)) d += `M${c + quiet} ${r + quiet}h1v1h-1z`;
+    return `<svg viewBox="0 0 ${size} ${size}" shape-rendering="crispEdges" role="img" aria-label="QR-Code zur Gäste-Seite"><rect width="${size}" height="${size}" fill="#fff"/><path d="${d}" fill="#000"/></svg>`;
+  }
+  function qrAreaHTML() {
+    const url = state.event.guestUrl.trim();
+    if (!url) return '<p class="muted">Sobald der Link eingetragen ist, erscheint hier der QR-Code.</p>';
+    if (!validUrl(url)) return '<p class="muted">Das sieht noch nicht wie ein vollständiger Link aus. Er beginnt mit https://</p>';
+    const m = qrMatrix(url);
+    if (!m) return '<p class="muted">Für diesen Link konnte kein QR-Code erzeugt werden. Ist er vielleicht sehr lang?</p>';
+    return `${isDirty() ? '<div class="banner warn"><div>Du hast ungespeicherte Änderungen. Speichere, damit Gäste den aktuellen Stand sehen.</div></div>' : ''}
+      <div class="qr-wrap">
+        <figure class="poster-prev"><p class="pp-title">${esc(state.event.name || 'Willkommen')}</p><div class="pp-qr">${qrSvg(m)}</div><p class="pp-text">Scanne den Code und finde deinen Tisch</p></figure>
+        <div class="qr-actions">
+          <button class="btn primary" data-act="qr-poster">Aushang herunterladen (A4)</button>
+          <button class="btn" data-act="qr-png">Nur QR-Code herunterladen</button>
+          <button class="btn" data-act="qr-print">Aushang drucken</button>
+          <button class="btn" data-act="qr-copy">Link kopieren</button>
+        </div>
+      </div>`;
+  }
+  function drawQR(ctx, m, x, y, size) {
+    const quiet = 4, cells = m.n + quiet * 2, s = Math.floor(size / cells), real = s * cells;
+    const ox = Math.round(x + (size - real) / 2), oy = Math.round(y + (size - real) / 2);
+    ctx.fillStyle = '#fff'; ctx.fillRect(ox, oy, real, real);
+    ctx.fillStyle = '#000';
+    for (let r = 0; r < m.n; r++) for (let c = 0; c < m.n; c++) if (m.dark(r, c)) ctx.fillRect(ox + (c + quiet) * s, oy + (r + quiet) * s, s, s);
+  }
+  async function fontsReady() {
+    if (!document.fonts || !document.fonts.load) return;
+    try {
+      await Promise.race([
+        Promise.all(['600 80px "Bodoni Moda"', 'italic 500 60px "Bodoni Moda"', '400 40px "Jost"'].map((f) => document.fonts.load(f))),
+        new Promise((r) => setTimeout(r, 2500)),
+      ]);
+    } catch (e) { /* Ersatzschrift */ }
+  }
+  const canvasBlob = (c) => new Promise((res) => c.toBlob(res, 'image/png'));
+  function wrapLines(ctx, text, maxW) {
+    const words = String(text).split(/\s+/).filter(Boolean), lines = [];
+    let line = '';
+    for (const w of words) {
+      const test = line ? line + ' ' + w : w;
+      if (ctx.measureText(test).width > maxW && line) { lines.push(line); line = w; } else line = test;
+    }
+    if (line) lines.push(line);
+    if (lines.length === 2 && words.length > 2) {
+      // Zwei ausgewogene Zeilen statt einer langen und einer kurzen
+      let best = lines, bestW = Infinity;
+      for (let i = 1; i < words.length; i++) {
+        const a = words.slice(0, i).join(' '), b = words.slice(i).join(' ');
+        const w = Math.max(ctx.measureText(a).width, ctx.measureText(b).width);
+        if (w <= maxW && w < bestW) { bestW = w; best = [a, b]; }
+      }
+      return best;
+    }
+    return lines;
+  }
+  async function posterCanvas() {
+    const url = state.event.guestUrl.trim(), m = qrMatrix(url);
+    if (!m) return null;
+    await fontsReady();
+    const W = 1240, H = 1754, c = document.createElement('canvas');
+    c.width = W; c.height = H;
+    const x = c.getContext('2d');
+    const serif = '"Bodoni Moda", "Bodoni 72", Didot, Georgia, serif', sans = 'Jost, Futura, "Century Gothic", Arial, sans-serif';
+    x.fillStyle = '#fff'; x.fillRect(0, 0, W, H);
+    x.strokeStyle = '#A8844C'; x.lineWidth = 3; x.strokeRect(58, 58, W - 116, H - 116);
+    x.lineWidth = 1.5; x.strokeRect(76, 76, W - 152, H - 152);
+    x.textAlign = 'center'; x.fillStyle = '#18213D';
+    let fs = 112, lines;
+    do { x.font = `600 ${fs}px ${serif}`; lines = wrapLines(x, state.event.name || 'Willkommen', W - 280); fs -= 6; } while ((lines.length > 3 || lines.some((l) => x.measureText(l).width > W - 280)) && fs > 40);
+    fs += 6;
+    let y = 250;
+    for (const l of lines) { x.fillText(l, W / 2, y); y += fs * 1.08; }
+    const { when, where } = eventLines();
+    x.font = `400 38px ${sans}`; x.fillStyle = '#596079';
+    if (when) { y += 10; x.fillText(when, W / 2, y); y += 50; }
+    if (where) { x.fillText(where, W / 2, y); y += 50; }
+    y += 20;
+    x.strokeStyle = '#A8844C'; x.lineWidth = 2;
+    x.beginPath(); x.moveTo(W / 2 - 170, y); x.lineTo(W / 2 - 34, y); x.moveTo(W / 2 + 34, y); x.lineTo(W / 2 + 170, y); x.stroke();
+    x.beginPath(); x.moveTo(W / 2, y - 12); x.lineTo(W / 2 + 12, y); x.lineTo(W / 2, y + 12); x.lineTo(W / 2 - 12, y); x.closePath(); x.stroke();
+    const qrSize = Math.min(760, H - y - 330);
+    drawQR(x, m, (W - qrSize) / 2, y + 40, qrSize);
+    let ty = y + 40 + qrSize + 95;
+    x.fillStyle = '#18213D'; x.font = `italic 500 62px ${serif}`;
+    x.fillText('Scanne den Code', W / 2, ty);
+    x.font = `400 40px ${sans}`; x.fillStyle = '#596079';
+    x.fillText('und finde deinen Tisch', W / 2, ty + 60);
+    return c;
+  }
+  async function download(filename, data) {
+    if (caps.downloads) {
+      try { await caps.downloads.save({ filename, data }); return true; } catch (e) {
+        if (e && e.code === 'declined') return false;
+        toast(e && e.code === 'rate_limited' ? 'Es ist schon ein Download offen. Versuch es gleich noch einmal.' : 'Der Download hat nicht geklappt.');
+        return false;
+      }
+    }
+    try {
+      const blob = data instanceof Blob ? data : new Blob([data]);
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob); a.download = filename;
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+      return true;
+    } catch (e) { toast('Herunterladen ist hier nicht möglich.'); return false; }
+  }
+  const slug = (s) => canon(s).replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'ball';
+  async function printPoster() {
+    const c = await posterCanvas();
+    if (!c) return;
+    let area = document.getElementById('print-area');
+    if (!area) { area = document.createElement('div'); area.id = 'print-area'; document.body.appendChild(area); }
+    area.innerHTML = `<img alt="" src="${c.toDataURL('image/png')}">`;
+    const img = area.querySelector('img');
+    await new Promise((r) => (img.complete ? r() : (img.onload = r)));
+    try { window.print(); } catch (e) { toast('Drucken geht hier nicht direkt. Lade den Aushang herunter und drucke ihn aus.'); }
+  }
+
+  // ----- Einstellungen -----
+  function settingsTab() {
+    const e = state.event, o = state.options;
+    return `
+      <h1 class="a-h">Einstellungen</h1>
+      <div class="form-grid">
+        <label class="field span2"><span>Name des Balls</span><input type="text" data-bind="event.name" value="${esc(e.name)}"></label>
+        <label class="field"><span>Datum</span><input type="date" data-bind="event.date" value="${esc(e.date)}"></label>
+        <label class="field"><span>Beginn</span><input type="time" data-bind="event.time" value="${esc(e.time)}"></label>
+        <label class="field span2"><span>Ort</span><input type="text" data-bind="event.location" value="${esc(e.location)}" placeholder="z. B. Stadthalle Ybbs"></label>
+        <label class="field span2"><span>Begrüßung über der Namenssuche</span><textarea rows="3" data-bind="event.welcome" placeholder="Gib deinen Namen ein, dann zeigen wir dir deinen Tisch.">${esc(e.welcome)}</textarea></label>
+      </div>
+      <section class="a-sec"><h2>Was Gäste sehen</h2><div class="opt-list">
+        <label class="check"><input type="checkbox" data-opt="showProgram"${o.showProgram ? ' checked' : ''}> Programm</label>
+        <label class="check"><input type="checkbox" data-opt="showMenu"${o.showMenu ? ' checked' : ''}> Speisen & Getränke</label>
+        <label class="check"><input type="checkbox" data-opt="showTablemates"${o.showTablemates ? ' checked' : ''}> Wer sonst noch am selben Tisch sitzt</label>
+      </div></section>
+      <section class="a-sec"><h2>Daten</h2>
+        <p class="a-lead">Die Gästeliste ist Teil der veröffentlichten Seite. Wer den Link hat, kann sie technisch auslesen. Trag deshalb nur Namen und Tische ein, keine Telefonnummern oder Adressen.</p>
+        <div class="btn-row"><button class="btn" data-act="export-csv"${state.guests.length ? '' : ' disabled'}>Gästeliste als CSV</button><button class="btn" data-act="export-html">Gäste-Seite als HTML-Datei</button></div>
+        <p class="hint">Die HTML-Datei funktioniert auch auf jedem anderen Webspace, falls du die Seite selbst hosten willst.</p>
+      </section>
+      <section class="a-sec"><h2>Zurücksetzen</h2>
+        <div class="btn-row"><button class="btn danger" data-act="clear-guests"${state.guests.length ? '' : ' disabled'}>Alle Gäste löschen</button><button class="btn danger" data-act="reset-all">Alles löschen</button></div>
+      </section>`;
+  }
+
+  // ===================================================================
+  // 8. Speicherleiste, Hinweise, Dialoge
+  // ===================================================================
+  function renderSaveBar() {
+    let bar = document.getElementById('savebar');
+    const show = ui.mode === 'admin' && !ui.preview && (isDirty() || ui.saving);
+    if (!show) { if (bar) bar.remove(); return; }
+    if (!bar) {
+      bar = document.createElement('div');
+      bar.id = 'savebar'; bar.className = 'savebar';
+      bar.addEventListener('click', onClick);
+      document.body.appendChild(bar);
+    }
+    bar.innerHTML = `<div class="savebar-in" role="region" aria-label="Speichern"><span aria-live="polite">${ui.saving ? 'Wird gespeichert …' : 'Ungespeicherte Änderungen'}</span><button class="btn small inv" data-act="undo"${undoStack.length && !ui.saving ? '' : ' disabled'}>Rückgängig</button><button class="btn small hl" data-act="save"${ui.saving || ui.readOnly ? ' disabled' : ''}>Speichern</button></div>`;
+  }
+  function toast(msg, opt = {}) {
+    let el = document.getElementById('toast');
+    if (!el) {
+      el = document.createElement('div');
+      el.id = 'toast'; el.className = 'toast';
+      el.setAttribute('role', 'status'); el.setAttribute('aria-live', 'polite');
+      document.body.appendChild(el);
+    }
+    el.innerHTML = `<span>${esc(msg)}</span>${opt.action ? `<button class="btn small" type="button">${esc(opt.action.label)}</button>` : ''}`;
+    if (opt.action) el.querySelector('button').onclick = () => { el.classList.remove('show'); opt.action.run(); };
+    el.classList.add('show');
+    clearTimeout(toast.timer);
+    toast.timer = setTimeout(() => el.classList.remove('show'), opt.ms || (opt.action ? 6000 : 3800));
+  }
+  function askConfirm(title, text, okLabel) {
+    return new Promise((resolve) => {
+      const ov = document.createElement('div');
+      ov.className = 'modal-ov';
+      ov.innerHTML = `<div class="modal" role="dialog" aria-modal="true" aria-labelledby="m-title"><h2 id="m-title">${esc(title)}</h2><p>${esc(text)}</p><div class="modal-actions"><button class="btn" data-r="0">Abbrechen</button><button class="btn danger-fill" data-r="1">${esc(okLabel)}</button></div></div>`;
+      const close = (ok) => { ov.remove(); document.removeEventListener('keydown', onKey, true); resolve(ok); };
+      const onKey = (e) => { if (e.key === 'Escape') { e.stopPropagation(); close(false); } };
+      ov.addEventListener('click', (e) => { const b = e.target.closest('[data-r]'); if (b) close(b.dataset.r === '1'); else if (e.target === ov) close(false); });
+      document.addEventListener('keydown', onKey, true);
+      document.body.appendChild(ov);
+      ov.querySelector('[data-r="0"]').focus();
+    });
+  }
+
+  // ===================================================================
+  // 9. Speichern = neue Version der Seite veröffentlichen
+  // ===================================================================
+  function buildDocument(st) {
+    const S = '<' + 'script', E = '<' + '/script>';
+    const data = JSON.stringify(st).replace(/</g, '\\u003c').replace(/\u2028/g, '\\u2028').replace(/\u2029/g, '\\u2029');
+    return '<!doctype html>\n<html lang="de">\n<head>\n<meta charset="utf-8">\n'
+      + '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n'
+      + '<title>' + esc(st.event.name || 'Tischplan') + '</title>\n'
+      + '<link rel="preconnect" href="https://fonts.googleapis.com">\n'
+      + '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n'
+      + '<link rel="stylesheet" href="' + FONT_URL + '">\n'
+      + '<style id="app-style">' + SRC.style + '<' + '/style>\n</head>\n<body>\n<div id="root"></div>\n'
+      + S + ' type="application/json" id="ball-data">' + data + E + '\n'
+      + S + ' id="qr-lib">' + SRC.qr + E + '\n'
+      + S + ' id="app">' + SRC.app + E + '\n</body>\n</html>\n';
+  }
+  async function save() {
+    if (ui.saving || !isDirty()) return;
+    if (!caps.artifact) { toast('Speichern funktioniert nur direkt in claude.ai.'); return; }
+    if (ui.readOnly) { toast('Diese Ansicht darf nicht speichern.'); return; }
+    ui.saving = true; renderSaveBar();
+    const next = JSON.parse(JSON.stringify(state));
+    next.updatedAt = new Date().toISOString();
+    store.set(DRAFT_KEY, { base: state.updatedAt, at: Date.now(), state, pending: next.updatedAt });
+    store.set(UI_KEY, { mode: 'admin', aTab: ui.aTab, justSaved: true }, 'session');
+    let attempt = 0;
+    for (;;) {
+      try {
+        await caps.artifact.publish(buildDocument(next));
+        // Normalerweise lädt die Seite jetzt neu. Falls nicht, hier weiter:
+        state = normalizeState(next); published = JSON.stringify(state);
+        ui.saving = false; undoStack.length = 0; store.del(DRAFT_KEY); store.del(UI_KEY, 'session');
+        render(); toast('Gespeichert. Gäste sehen jetzt die neue Version.');
+        return;
+      } catch (e) {
+        const code = (e && e.code) || 'upstream_error';
+        if (code === 'upstream_error' && attempt === 0) { attempt++; await new Promise((r) => setTimeout(r, 800 + Math.random() * 1200)); continue; }
+        ui.saving = false;
+        store.del(UI_KEY, 'session');
+        store.set(DRAFT_KEY, { base: state.updatedAt, at: Date.now(), state });
+        if (code === 'conflict') toast('Inzwischen hat jemand anderer gespeichert. Die neueste Version wird geladen, deine Änderungen kannst du danach wiederherstellen.', { ms: 9000 });
+        else if (['not_writer', 'not_granted', 'consent_required', 'capability_disabled', 'capability_removed', 'not_declared'].includes(code)) { ui.readOnly = true; render(); toast('Diese Ansicht darf nicht speichern.'); }
+        else if (code === 'rate_limited') toast('Zu viele Speichervorgänge hintereinander. Warte kurz und speichere dann noch einmal.');
+        else if (code === 'too_large') toast('Die Daten sind zu groß zum Speichern.');
+        else toast('Speichern hat nicht geklappt. Versuch es gleich noch einmal.');
+        renderSaveBar();
+        return;
+      }
+    }
+  }
+
+  // ===================================================================
+  // 10. Eingaben verarbeiten
+  // ===================================================================
+  function render() {
+    if (ui.mode === 'admin') renderAdmin(); else renderGuest();
+    renderSaveBar();
+  }
+  function setPath(obj, path, val) {
+    const parts = path.split('.');
+    let o = obj;
+    for (let i = 0; i < parts.length - 1; i++) o = o[parts[i]];
+    o[parts[parts.length - 1]] = val;
+  }
+  function addGuestFromForm() {
+    const nameEl = document.getElementById('add-name');
+    const name = nameEl.value.replace(/\s+/g, ' ').trim().slice(0, 120);
+    if (!name) { nameEl.focus(); toast('Gib zuerst einen Namen ein.'); return; }
+    const count = clamp(parseInt(document.getElementById('add-count').value, 10) || 1, 1, 50);
+    const label = document.getElementById('add-table').value.trim().replace(/^tisch\s*/i, '').slice(0, 30);
+    let created = false;
+    ui.addTable = label;
+    focusAfter = '#add-name';
+    commit((s) => {
+      let t = null;
+      if (label) { const before = s.tables.length; t = ensureTable(s, label, curFloor().id); created = s.tables.length > before; }
+      s.guests.push({ id: uid(), name, count, tableId: t ? t.id : '' });
+    });
+    const where = multiFloor() ? ` im Plan „${floorName(curFloor())}“` : ' im Saalplan';
+    toast(created ? `${name} hinzugefügt. Tisch ${label} wurde${where} angelegt.` : `${name} hinzugefügt.`);
+  }
+  function applyImport(mode) {
+    const { rows } = parseImport(ui.importText);
+    if (!rows.length) return;
+    commit((s) => {
+      if (mode === 'replace') s.guests = [];
+      for (const r of rows) {
+        const t = r.table ? ensureTable(s, r.table, curFloor().id) : null;
+        s.guests.push({ id: uid(), name: r.name, count: r.count, tableId: t ? t.id : '' });
+      }
+    }, { render: false });
+    ui.importText = ''; ui.importOpen = false;
+    render();
+    toast(`${rows.length} ${rows.length === 1 ? 'Eintrag' : 'Einträge'} übernommen.`, { action: { label: 'Rückgängig', run: undo } });
+  }
+  function csvExport() {
+    const cell = (v) => {
+      let s = String(v);
+      if (/^[=+\-@]/.test(s)) s = "'" + s;
+      return /[;"\r\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+    };
+    const rows = [['Name', 'Personen', 'Tisch']].concat(state.guests.slice().sort((a, b) => natCmp(a.name, b.name)).map((g) => [g.name, g.count, (tableById(g.tableId) || { label: '' }).label]));
+    return '\ufeff' + rows.map((r) => r.map(cell).join(';')).join('\r\n') + '\r\n';
+  }
+
+  let titleTaps = [];
+  async function onClick(e) {
+    if (ui.mode === 'guest' && ui.adminMaybe && e.target.closest('.g-title')) {
+      const now = Date.now();
+      titleTaps = titleTaps.filter((t) => now - t < 3000).concat(now);
+      if (titleTaps.length >= 5) { titleTaps = []; ui.mode = 'admin'; ui.preview = false; render(); return; }
+    }
+    const b = e.target.closest('[data-act]');
+    if (!b || b.disabled) return;
+    const act = b.dataset.act, id = b.dataset.id;
+    switch (act) {
+      // --- Gäste ---
+      case 'pick':
+        ui.meId = id; ui.reveal = true; ui.zoom = 1; ui.gTab = 'seat'; ui.gFloor = null;
+        store.set(ME_KEY, id);
+        render(); window.scrollTo(0, 0);
+        break;
+      case 'search-again':
+        ui.meId = null; ui.query = ''; store.del(ME_KEY);
+        render();
+        { const q = document.getElementById('g-q'); if (q) q.focus(); }
+        break;
+      case 'gtab':
+        ui.gTab = b.dataset.tab; ui.zoom = 1;
+        render(); window.scrollTo(0, 0);
+        break;
+      case 'zoom': {
+        const levels = [1, 1.6, 2.3, 3];
+        const i = clamp(levels.indexOf(ui.zoom) + Number(b.dataset.z), 0, levels.length - 1);
+        ui.zoom = levels[i];
+        document.querySelectorAll('.g-plan svg').forEach((svg) => { svg.style.width = ui.zoom > 1 ? ui.zoom * 100 + '%' : ''; });
+        const head = b.closest('.plan-head');
+        if (head) head.querySelector('.zoom').outerHTML = zoomControls();
+        centerOnHighlight();
+        break;
+      }
+      case 'gfloor': ui.gFloor = id; render(); break;
+      case 'enter-admin': ui.mode = 'admin'; ui.preview = false; render(); window.scrollTo(0, 0); break;
+      case 'back-admin': ui.mode = 'admin'; ui.preview = false; render(); window.scrollTo(0, 0); break;
+
+      // --- Verwaltung allgemein ---
+      case 'atab': ui.aTab = b.dataset.tab; render(); window.scrollTo(0, 0); break;
+      case 'goto':
+        ui.aTab = b.dataset.tab;
+        if (b.dataset.unassigned) ui.gUnassigned = true;
+        if (b.dataset.sel) { ui.sel = b.dataset.sel; const it = findItem(ui.sel); if (it) ui.floor = it.item.floorId; }
+        if (b.dataset.floor) { ui.floor = b.dataset.floor; ui.sel = null; }
+        render(); window.scrollTo(0, 0);
+        break;
+      case 'preview': ui.mode = 'guest'; ui.preview = true; ui.gTab = 'seat'; render(); window.scrollTo(0, 0); break;
+      case 'save': save(); break;
+      case 'undo': undo(); break;
+      case 'draft-restore':
+        undoStack.push(JSON.stringify(state));
+        state = normalizeState(ui.draft.state); ui.draft = null;
+        afterChange(true); toast('Änderungen wiederhergestellt. Vergiss nicht zu speichern.');
+        break;
+      case 'draft-discard': ui.draft = null; store.del(DRAFT_KEY); render(); break;
+      case 'demo-clear':
+        commit((s) => { s.guests = []; s.program = []; s.menu = []; s.isDemo = false; });
+        toast('Beispieldaten entfernt. Der Saalplan ist geblieben.', { action: { label: 'Rückgängig', run: undo } });
+        break;
+
+      // --- Gästeliste ---
+      case 'add-guest': addGuestFromForm(); break;
+      case 'del-guest': {
+        const g = state.guests.find((x) => x.id === id);
+        if (!g) break;
+        commit((s) => { s.guests = s.guests.filter((x) => x.id !== id); });
+        toast(`${g.name} gelöscht.`, { action: { label: 'Rückgängig', run: undo } });
+        break;
+      }
+      case 'show-all': ui.gShowAll = true; document.getElementById('g-table').innerHTML = guestListHTML(); break;
+      case 'toggle-import': ui.importOpen = !ui.importOpen; render(); if (ui.importOpen) { const t = document.getElementById('import-text'); if (t) t.focus(); } break;
+      case 'import-apply':
+        if (b.dataset.mode === 'replace' && !(await askConfirm('Liste ersetzen?', `Die bisherigen ${state.guests.length} Einträge werden durch die eingefügte Liste ersetzt.`, 'Ersetzen'))) break;
+        applyImport(b.dataset.mode);
+        break;
+      case 'export-csv':
+        if (await download(slug(state.event.name) + '-gaesteliste.csv', csvExport())) toast('Gästeliste heruntergeladen.');
+        break;
+
+      // --- Saalplan ---
+      case 'select': ui.sel = id || null; refreshPlan(); break;
+      case 'plan-add-table': {
+        let t;
+        commit((s) => { t = newTable(s, b.dataset.shape === 'rect' ? 'rect' : 'round', null, curFloor().id); s.tables.push(t); }, { render: false });
+        ui.sel = t.id; render();
+        toast(`${tableName(t)} hinzugefügt. Zieh ihn an die richtige Stelle.`);
+        break;
+      }
+      case 'plan-add-obj': {
+        const type = (document.getElementById('obj-type') || {}).value || 'other';
+        const def = OBJ[type] || OBJ.other;
+        let o;
+        const fid = curFloor().id;
+        commit((s) => { const p = findFreeSpot(s, def.w, def.h, null, fid); o = { id: uid(), type, label: '', x: p.x, y: p.y, w: def.w, h: def.h, floorId: fid }; s.objects.push(o); }, { render: false });
+        ui.sel = o.id; render();
+        break;
+      }
+      case 'plan-auto': {
+        const fid = curFloor().id;
+        commit((s) => {
+          const ts = s.tables.filter((t) => t.floorId === fid).sort((a, b2) => natCmp(a.label, b2.label));
+          for (const t of ts) { t.x = -9999; t.y = -9999; }
+          for (const t of ts) { const p = findFreeSpot(s, t.w, t.h, t.id, fid); t.x = p.x; t.y = p.y; }
+        });
+        toast('Tische neu angeordnet.', { action: { label: 'Rückgängig', run: undo } });
+        break;
+      }
+      case 'floor': ui.floor = id; ui.sel = null; render(); break;
+      case 'floor-add': {
+        const used = new Set(state.floors.map((f) => canon(f.name)));
+        const name = ['Erdgeschoss', 'Obergeschoss', '2. Obergeschoss', '3. Obergeschoss', 'Keller'].find((n) => !used.has(canon(n))) || 'Geschoss ' + (state.floors.length + 1);
+        const base = curFloor();
+        let nf;
+        commit((s) => { nf = { id: uid(), name, w: base.w, h: base.h }; s.floors.push(nf); }, { render: false });
+        ui.floor = nf.id; ui.sel = null; focusAfter = '[data-floor="name"]';
+        render();
+        toast(`„${name}“ hinzugefügt. Den Namen kannst du gleich hier ändern.`);
+        break;
+      }
+      case 'floor-del': {
+        if (!multiFloor()) break;
+        const f = curFloor();
+        const ts = onFloor(state.tables, f), os = onFloor(state.objects, f);
+        const ids = new Set(ts.map((t) => t.id));
+        const affected = state.guests.filter((g) => ids.has(g.tableId)).length;
+        const parts = [];
+        if (ts.length) parts.push(ts.length === 1 ? '1 Tisch' : ts.length + ' Tische');
+        if (os.length) parts.push(os.length === 1 ? '1 Bereich' : os.length + ' Bereiche');
+        const text = parts.length
+          ? `${parts.join(' und ')} auf diesem Plan ${ts.length + os.length === 1 ? 'wird' : 'werden'} mit gelöscht.${affected ? ` ${affected === 1 ? '1 Eintrag verliert' : affected + ' Einträge verlieren'} dadurch den Tisch.` : ''}`
+          : 'Auf diesem Plan ist noch nichts eingezeichnet.';
+        if (!(await askConfirm(`„${floorName(f)}“ löschen?`, text, 'Geschoss löschen'))) break;
+        commit((s) => {
+          s.floors = s.floors.filter((x) => x.id !== f.id);
+          s.tables = s.tables.filter((t) => t.floorId !== f.id);
+          s.objects = s.objects.filter((o) => o.floorId !== f.id);
+          s.guests.forEach((g) => { if (ids.has(g.tableId)) g.tableId = ''; });
+        }, { render: false });
+        ui.floor = null; ui.sel = null;
+        render();
+        toast(`„${floorName(f)}“ gelöscht.`, { action: { label: 'Rückgängig', run: undo } });
+        break;
+      }
+      case 'plan-del': deleteSelected(); break;
+      case 'plan-dup': {
+        const found = findItem(ui.sel);
+        if (!found) break;
+        let copy;
+        commit((s) => {
+          copy = Object.assign({}, found.item, { id: uid() });
+          if (found.kind === 'table') copy.label = nextTableLabel(s);
+          const p = findFreeSpot(s, copy.w, copy.h, null, copy.floorId);
+          copy.x = p.x; copy.y = p.y;
+          (found.kind === 'table' ? s.tables : s.objects).push(copy);
+        }, { render: false });
+        ui.sel = copy.id; render();
+        break;
+      }
+      case 'plan-rot': {
+        const found = findItem(ui.sel);
+        if (!found) break;
+        commit(() => { const it = found.item; [it.w, it.h] = [it.h, it.w]; keepInRoom(it); }, { render: false });
+        refreshPlan();
+        break;
+      }
+      case 'plan-shape': {
+        const found = findItem(ui.sel);
+        if (!found || found.kind !== 'table' || found.item.shape === b.dataset.shape) break;
+        commit(() => {
+          const t = found.item;
+          t.shape = b.dataset.shape;
+          if (t.shape === 'rect') { t.w = 24; t.h = 9; } else { t.w = 18; t.h = 18; }
+          keepInRoom(t);
+        }, { render: false });
+        refreshPlan();
+        break;
+      }
+
+      // --- Programm ---
+      case 'prog-add':
+        commit((s) => { s.program.push({ id: uid(), time: '', title: '', desc: '' }); }, { render: false });
+        render();
+        { const rows = document.querySelectorAll('.prog-row [data-p="title"]'); const last = rows[rows.length - 1]; if (last) last.focus(); }
+        break;
+      case 'prog-chip':
+        commit((s) => { s.program.push({ id: uid(), time: b.dataset.time, title: b.dataset.title, desc: '' }); });
+        break;
+      case 'prog-del': commit((s) => { s.program = s.program.filter((p) => p.id !== id); }); toast('Programmpunkt gelöscht.', { action: { label: 'Rückgängig', run: undo } }); break;
+
+      // --- Karte ---
+      case 'menu-add-cat':
+        commit((s) => { s.menu.push({ id: uid(), title: '', items: [{ id: uid(), name: '', desc: '', price: '' }] }); }, { render: false });
+        render();
+        { const heads = document.querySelectorAll('[data-mc="title"]'); const last = heads[heads.length - 1]; if (last) last.focus(); }
+        break;
+      case 'menu-chip':
+        commit((s) => { s.menu.push({ id: uid(), title: b.dataset.title, items: [{ id: uid(), name: '', desc: '', price: '' }] }); });
+        break;
+      case 'menu-del-cat': commit((s) => { s.menu = s.menu.filter((c) => c.id !== id); }); toast('Kategorie gelöscht.', { action: { label: 'Rückgängig', run: undo } }); break;
+      case 'menu-add-item': {
+        const cid = b.dataset.cat;
+        let newId;
+        commit((s) => { const c = s.menu.find((x) => x.id === cid); if (c) { newId = uid(); c.items.push({ id: newId, name: '', desc: '', price: '' }); } }, { render: false });
+        render();
+        if (newId) { const el = document.querySelector(`[data-mi="name"][data-id="${newId}"]`); if (el) el.focus(); }
+        break;
+      }
+      case 'menu-del-item': commit((s) => { const c = s.menu.find((x) => x.id === b.dataset.cat); if (c) c.items = c.items.filter((i) => i.id !== id); }); break;
+      case 'menu-move':
+        commit((s) => {
+          const c = s.menu.find((x) => x.id === b.dataset.cat);
+          if (!c) return;
+          const i = c.items.findIndex((x) => x.id === id), j = i + Number(b.dataset.dir);
+          if (i < 0 || j < 0 || j >= c.items.length) return;
+          [c.items[i], c.items[j]] = [c.items[j], c.items[i]];
+        });
+        break;
+
+      // --- QR-Code ---
+      case 'qr-poster': {
+        const c = await posterCanvas();
+        if (c && await download(slug(state.event.name) + '-aushang-qr-code.png', await canvasBlob(c))) toast('Aushang heruntergeladen.');
+        break;
+      }
+      case 'qr-png': {
+        const m = qrMatrix(state.event.guestUrl.trim());
+        if (!m) break;
+        const c = document.createElement('canvas');
+        c.width = c.height = 1200;
+        drawQR(c.getContext('2d'), m, 0, 0, 1200);
+        if (await download(slug(state.event.name) + '-qr-code.png', await canvasBlob(c))) toast('QR-Code heruntergeladen.');
+        break;
+      }
+      case 'qr-print': printPoster(); break;
+      case 'qr-copy': {
+        const url = state.event.guestUrl.trim();
+        try { await navigator.clipboard.writeText(url); toast('Link kopiert.'); } catch (err) {
+          const input = document.getElementById('guest-url');
+          if (input) { input.focus(); input.select(); }
+          toast('Kopieren ging nicht automatisch. Der Link ist markiert, kopiere ihn mit Strg+C.');
+        }
+        break;
+      }
+
+      // --- Einstellungen ---
+      case 'export-html': {
+        const copy = JSON.parse(JSON.stringify(state));
+        copy.updatedAt = new Date().toISOString();
+        if (await download(slug(state.event.name) + '-gaesteseite.html', buildDocument(copy))) toast('HTML-Datei heruntergeladen.');
+        break;
+      }
+      case 'clear-guests':
+        if (!(await askConfirm('Alle Gäste löschen?', `Alle ${state.guests.length} Einträge werden entfernt. Tische und Saalplan bleiben erhalten.`, 'Alle löschen'))) break;
+        commit((s) => { s.guests = []; });
+        toast('Alle Gäste gelöscht.', { action: { label: 'Rückgängig', run: undo } });
+        break;
+      case 'reset-all':
+        if (!(await askConfirm('Wirklich alles löschen?', 'Gäste, Tische, Saalplan, Programm und Karte werden entfernt. Name und Link bleiben.', 'Alles löschen'))) break;
+        commit((s) => {
+          const keep = { name: s.event.name, guestUrl: s.event.guestUrl };
+          Object.assign(s, emptyState(), { updatedAt: s.updatedAt });
+          s.event.name = keep.name; s.event.guestUrl = keep.guestUrl;
+        });
+        ui.sel = null;
+        toast('Alles gelöscht.', { action: { label: 'Rückgängig', run: undo } });
+        break;
+      default: break;
+    }
+  }
+
+  function onInput(e) {
+    const el = e.target, d = el.dataset;
+    if (el.id === 'g-q') {
+      ui.query = el.value;
+      const r = document.getElementById('g-results');
+      if (r) r.innerHTML = resultsHTML();
+      return;
+    }
+    if (el.id === 'g-filter') { ui.gFilter = el.value; document.getElementById('g-table').innerHTML = guestListHTML(); return; }
+    if (el.id === 'import-text') { ui.importText = el.value; document.getElementById('import-preview').innerHTML = importPreviewHTML(); return; }
+    if (d.bind) {
+      if (el.type === 'time' || el.type === 'date') return; // erst bei "change"
+      commit((s) => setPath(s, d.bind, el.value), { key: 'bind:' + d.bind, render: false });
+      if (d.bind === 'event.name') { const n = document.getElementById('a-brand-name'); if (n) n.textContent = el.value || 'Unser Ball'; }
+      if (d.bind === 'event.guestUrl') { const q = document.getElementById('qr-area'); if (q) q.innerHTML = qrAreaHTML(); }
+      return;
+    }
+    if (d.floor === 'name') {
+      const f = curFloor();
+      commit(() => { f.name = el.value.slice(0, 40); }, { key: 'floor:' + f.id + ':name', render: false });
+      const bar = document.getElementById('floor-bar'); if (bar) bar.innerHTML = floorBarHTML();
+      return;
+    }
+    if (d.g === 'name' || d.g === 'count') {
+      const id = el.closest('[data-id]').dataset.id;
+      const g = state.guests.find((x) => x.id === id);
+      if (!g) return;
+      if (d.g === 'name') commit(() => { g.name = el.value.slice(0, 120); }, { key: 'g:' + id + ':name', render: false });
+      else { const n = parseInt(el.value, 10); if (n >= 1 && n <= 50) commit(() => { g.count = n; }, { key: 'g:' + id + ':count', render: false }); }
+      return;
+    }
+    if (d.t) {
+      const found = findItem(ui.sel);
+      if (!found || found.kind !== 'table') return;
+      const t = found.item;
+      if (d.t === 'label') {
+        commit(() => { t.label = el.value.slice(0, 30); }, { key: 't:' + t.id + ':label', render: false });
+        const h = document.getElementById('props-title'); if (h) h.textContent = tableName(t);
+      } else if (d.t === 'seats') {
+        const n = parseInt(el.value, 10);
+        if (n >= 1 && n <= 60) commit(() => { t.seats = n; }, { key: 't:' + t.id + ':seats', render: false });
+      } else {
+        const v = fromM(el.value);
+        if (!(v >= 4 && v <= 400)) return;
+        commit(() => { if (d.t === 'd') { t.w = v; t.h = v; } else t[d.t] = v; keepInRoom(t); }, { key: 't:' + t.id + ':' + d.t, render: false });
+      }
+      refreshPlan(false);
+      return;
+    }
+    if (d.o === 'label' || d.o === 'w' || d.o === 'h') {
+      const found = findItem(ui.sel);
+      if (!found || found.kind !== 'obj') return;
+      const o = found.item;
+      if (d.o === 'label') {
+        commit(() => { o.label = el.value.slice(0, 40); }, { key: 'o:' + o.id + ':label', render: false });
+        const h = document.getElementById('props-title'); if (h) h.textContent = o.label || OBJ[o.type].name;
+      } else {
+        const v = fromM(el.value);
+        if (!(v >= 2 && v <= 2000)) return;
+        commit(() => { o[d.o] = Math.min(v, d.o === 'w' ? floorOf(o).w : floorOf(o).h); keepInRoom(o); }, { key: 'o:' + o.id + ':' + d.o, render: false });
+      }
+      refreshPlan(false);
+      return;
+    }
+    if (d.p === 'title' || d.p === 'desc') {
+      const id = el.closest('[data-id]').dataset.id;
+      const p = state.program.find((x) => x.id === id);
+      if (p) commit(() => { p[d.p] = el.value.slice(0, d.p === 'title' ? 120 : 300); }, { key: 'p:' + id + ':' + d.p, render: false });
+      return;
+    }
+    if (d.mc === 'title') {
+      const c = state.menu.find((x) => x.id === d.id);
+      if (c) commit(() => { c.title = el.value.slice(0, 80); }, { key: 'mc:' + c.id, render: false });
+      return;
+    }
+    if (d.mi) {
+      const c = state.menu.find((x) => x.id === d.cat);
+      const i = c && c.items.find((x) => x.id === d.id);
+      if (i) commit(() => { i[d.mi] = el.value.slice(0, d.mi === 'price' ? 30 : d.mi === 'desc' ? 200 : 120); }, { key: 'mi:' + i.id + ':' + d.mi, render: false });
+    }
+  }
+
+  function onChange(e) {
+    const el = e.target, d = el.dataset;
+    if (d.bind && (el.type === 'time' || el.type === 'date')) {
+      commit((s) => setPath(s, d.bind, el.value), { render: false });
+      return;
+    }
+    if (d.g === 'table') {
+      const id = el.closest('[data-id]').dataset.id;
+      const g = state.guests.find((x) => x.id === id);
+      if (!g) return;
+      commit(() => { g.tableId = el.value; }, { render: false });
+      if (ui.gUnassigned && g.tableId) document.getElementById('g-table').innerHTML = guestListHTML();
+      else el.closest('.gl-row').classList.toggle('unassigned', !g.tableId);
+      return;
+    }
+    if (el.id === 'g-unassigned') { ui.gUnassigned = el.checked; document.getElementById('g-table').innerHTML = guestListHTML(); return; }
+    if (el.id === 'g-sort') { ui.gSort = el.value; document.getElementById('g-table').innerHTML = guestListHTML(); return; }
+    if (el.id === 'snap') { ui.snap = el.checked; return; }
+    if (el.id === 'import-file' && el.files && el.files[0]) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        ui.importText = String(reader.result || '');
+        const ta = document.getElementById('import-text'); if (ta) ta.value = ui.importText;
+        document.getElementById('import-preview').innerHTML = importPreviewHTML();
+      };
+      reader.readAsText(el.files[0]);
+      return;
+    }
+    if (d.room) {
+      const f = curFloor(), v = fromM(el.value);
+      if (!(v >= 60 && v <= 2000)) { el.value = toM(f[d.room]); toast('Bitte eine Größe zwischen 6 und 200 Metern eingeben.'); return; }
+      commit((s) => { f[d.room] = v; s.tables.concat(s.objects).filter((it) => it.floorId === f.id).forEach(keepInRoom); }, { render: false });
+      refreshPlan(false);
+      return;
+    }
+    if (d.move === 'floor') {
+      const found = findItem(ui.sel);
+      if (!found || !state.floors.some((f) => f.id === el.value)) return;
+      const it = found.item;
+      commit((s) => {
+        it.floorId = el.value;
+        keepInRoom(it);
+        if (overlapsOthers(it)) { const p = findFreeSpot(s, it.w, it.h, it.id, it.floorId); it.x = p.x; it.y = p.y; }
+      }, { render: false });
+      ui.floor = it.floorId;
+      render();
+      toast(`${found.kind === 'table' ? tableName(it) : objName(it)} ist jetzt im Plan „${floorName(floorOf(it))}“.`);
+      return;
+    }
+    if (d.o === 'type') {
+      const found = findItem(ui.sel);
+      if (!found || found.kind !== 'obj') return;
+      commit(() => { found.item.type = OBJ[el.value] ? el.value : 'other'; }, { render: false });
+      refreshPlan();
+      return;
+    }
+    if (d.p === 'time') {
+      const id = el.closest('[data-id]').dataset.id;
+      const p = state.program.find((x) => x.id === id);
+      if (p) commit(() => { p.time = el.value; });
+      return;
+    }
+    if (d.opt) { commit((s) => { s.options[d.opt] = el.checked; }, { render: false }); }
+  }
+
+  function onKeyDown(e) {
+    const t = e.target;
+    if (e.key === 'Enter' && (t.id === 'add-name' || t.id === 'add-count' || t.id === 'add-table')) { e.preventDefault(); addGuestFromForm(); return; }
+    if (e.key === 'Enter' && t.id === 'g-q') {
+      e.preventDefault();
+      const list = searchGuests(ui.query);
+      if (list.length === 1) document.querySelector('.result').click();
+      t.blur();
+    }
+  }
+  function onDocKeyDown(e) {
+    if (ui.mode !== 'admin' || document.querySelector('.modal-ov')) return;
+    const inField = /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName);
+    const mod = e.ctrlKey || e.metaKey;
+    if (mod && e.key.toLowerCase() === 's') { e.preventDefault(); save(); return; }
+    if (mod && !e.shiftKey && e.key.toLowerCase() === 'z' && !inField) { e.preventDefault(); undo(); return; }
+    if (ui.aTab !== 'plan' || !ui.sel || inField) return;
+    const dir = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] }[e.key];
+    if (dir) {
+      e.preventDefault();
+      const found = findItem(ui.sel);
+      if (!found) return;
+      const step = e.shiftKey ? 1 : 5;
+      commit(() => { found.item.x += dir[0] * step; found.item.y += dir[1] * step; keepInRoom(found.item); }, { key: 'nudge:' + ui.sel, render: false });
+      refreshPlan(false);
+    } else if (e.key === 'Delete' || e.key === 'Backspace') {
+      e.preventDefault(); deleteSelected();
+    } else if (e.key === 'Escape') {
+      ui.sel = null; refreshPlan();
+    }
+  }
+
+  // ===================================================================
+  // 11. Start
+  // ===================================================================
+  async function detectCapabilities(sess) {
+    const c = window.claude;
+    if (!c || typeof c.use !== 'function') return;
+    const use = (n) => Promise.resolve().then(() => c.use(n)).catch(() => null);
+    const [art, usr, dl] = await Promise.all([use('artifact'), use('user'), use('downloads')]);
+    caps.artifact = art; caps.downloads = dl;
+    let canEdit = null;
+    if (usr) { try { canEdit = await usr.canEdit(); } catch (e) { canEdit = null; } }
+    // Nur bei bestätigtem Bearbeitungsrecht den Verwaltungs-Link zeigen (Gäste sollen ihn nie sehen)
+    ui.canAdmin = canEdit === true;
+    ui.adminMaybe = canEdit === null && !!art; // Notausgang: 5× auf den Ballnamen tippen
+    // Wer bearbeiten darf, landet direkt in der Verwaltung
+    if (ui.canAdmin && ui.mode === 'guest' && !ui.preview && (canEdit === true || (sess && sess.mode === 'admin'))) {
+      ui.mode = 'admin';
+      if (sess && sess.aTab) ui.aTab = sess.aTab;
+    }
+    render();
+    if (sess && sess.justSaved && ui.mode === 'admin') toast('Gespeichert. Gäste sehen jetzt die neue Version.');
+  }
+
+  function init() {
+    const sess = store.get(UI_KEY, 'session');
+    store.del(UI_KEY, 'session');
+    const me = store.get(ME_KEY);
+    if (me && state.guests.some((g) => g.id === me)) ui.meId = me;
+    const draft = store.get(DRAFT_KEY);
+    if (draft && draft.state) {
+      if (draft.pending && draft.pending === state.updatedAt) store.del(DRAFT_KEY);
+      else if (JSON.stringify(normalizeState(draft.state)) === published) store.del(DRAFT_KEY);
+      else ui.draft = draft;
+    }
+    root.addEventListener('click', onClick);
+    root.addEventListener('input', onInput);
+    root.addEventListener('change', onChange);
+    root.addEventListener('keydown', onKeyDown);
+    root.addEventListener('pointerdown', onPointerDown);
+    root.addEventListener('pointermove', onPointerMove);
+    root.addEventListener('pointerup', onPointerUp);
+    root.addEventListener('pointercancel', onPointerUp);
+    document.addEventListener('keydown', onDocKeyDown);
+    window.addEventListener('beforeunload', (e) => {
+      if (ui.mode === 'admin' && !ui.saving && isDirty()) { e.preventDefault(); e.returnValue = ''; }
+    });
+    // Jede halbe Minute „Als Nächstes“ aktualisieren
+    setInterval(() => {
+      if (ui.mode !== 'guest') return;
+      const n = document.getElementById('g-next');
+      if (n) n.innerHTML = nextBanner();
+      if (ui.gTab === 'program') { const b = document.getElementById('g-body'); if (b) b.innerHTML = programView(); }
+    }, 30000);
+    render();
+    detectCapabilities(sess);
+  }
+
+  // Für automatische Tests von außen erreichbar (ändert nichts am Verhalten)
+  window.__ballplan = { get state() { return state; }, ui, buildDocument, parseImport, searchGuests, canon, normalizeState, isDirty: () => isDirty() };
+
+  init();
+})();
+</script>
+</body>
+</html>
